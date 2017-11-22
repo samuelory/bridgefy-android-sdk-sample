@@ -98,6 +98,7 @@ public class MatchActivity extends TicTacToeActivity {
     @Override
     protected void onDestroy() {
         // unregister this activity from the Otto plugin (not a part of the Bridgefy framework)
+        if (BridgefyListener.getOttoBus()!=null)
         BridgefyListener.getOttoBus().unregister(this);
 
         if (isFinishing()) {
