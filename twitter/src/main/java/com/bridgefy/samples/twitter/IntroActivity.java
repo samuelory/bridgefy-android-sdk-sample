@@ -162,7 +162,7 @@ public class IntroActivity extends AppCompatActivity {
             // Start Bridgefy
             startBridgefy();
 
-        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+        } else {
             Toast.makeText(this, "Location permissions needed to start peers discovery.", Toast.LENGTH_SHORT).show();
         }
     }
