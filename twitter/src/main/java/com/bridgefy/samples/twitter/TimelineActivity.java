@@ -58,12 +58,12 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
         txtMessage.setFilters(new InputFilter[] { new InputFilter.LengthFilter(138 - username.length()) });
 
         // Configure the Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         gatewaySwitch.setChecked(true);
 
         // configure the recyclerview
-        RecyclerView tweetsRecyclerView = (RecyclerView) findViewById(R.id.tweet_list);
+        RecyclerView tweetsRecyclerView = findViewById(R.id.tweet_list);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setReverseLayout(true);
         tweetsRecyclerView.setLayoutManager(mLinearLayoutManager);

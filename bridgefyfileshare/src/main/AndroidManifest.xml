@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.bridgefy.samples.fileshare">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name="com.bridgefy.samples.fileshare.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.bridgefy.samples.fileshare.FileActivity"></activity>
+
+        <!-- Bridgefy SDK key -->
+        <meta-data
+            android:name="com.bridgefy.sdk.API_KEY"
+            android:value="456a3cc7-f351-4b48-8f8d-7274b5592fd6" />
+    </application>
+
+</manifest>

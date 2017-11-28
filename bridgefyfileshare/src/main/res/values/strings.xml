@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Bridgefy File Share</string>
+
+    <string name="powered_by">Powered by Bridgefy</string>
+    <string name="placeholder">Write a message</string>
+    <string name="broadcast">Broadcast</string>
+    <string name="registration_error">A registration occurred. Make sure you\'re online the first time
+    that you install this sample app</string>
+</resources>

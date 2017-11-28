@@ -74,8 +74,8 @@ public abstract class TicTacToeActivity extends AppCompatActivity {
     protected void initializeBoard() {
         size = 3;
         board = new int[size][size];
-        mainBoard = (TableLayout) findViewById(R.id.mainBoard);
-        tv_turn = (TextView) findViewById(R.id.turn);
+        mainBoard = findViewById(R.id.mainBoard);
+        tv_turn = findViewById(R.id.turn);
 
         if (myTurn) {
             tv_turn.setText(String.format(getString(R.string.your_turn),
@@ -102,42 +102,39 @@ public abstract class TicTacToeActivity extends AppCompatActivity {
     }
 
     View.OnClickListener MoveListener(final int r, final int c, final TextView tv) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (myTurn) {
-                    if (!isCellSet(r, c)) {
-                        // update the logic and visual board
-                        board[r][c] = turn;
-                        if (turn == X) {
-                            tv.setText(R.string.X);
-                        } else {
-                            tv.setText(R.string.O);
-                        }
-
-                        // update the turn
-                        myTurn = false;
-
-                        // get the game status
-                        if (gameStatus() == 0) {
-                            turn = flipChar(turn);
-                            tv_turn.setText(String.format(getString(R.string.their_turn),
-                                    rival.getNick(), String.valueOf(flipChar(myTurnChar))));
-                            sendMove(board);
-                        } else if (gameStatus() == -1) {
-                            tv_turn.setText(getString(R.string.draw));
-                            sendDraw(board);
-                            stopMatch(myTurn);
-                        } else {
-                            sendWinner();
-                            stopMatch(myTurn);
-                        }
+        return v -> {
+            if (myTurn) {
+                if (!isCellSet(r, c)) {
+                    // update the logic and visual board
+                    board[r][c] = turn;
+                    if (turn == X) {
+                        tv.setText(R.string.X);
                     } else {
-                        tv_turn.setText(getString(R.string.empty_square));
+                        tv.setText(R.string.O);
+                    }
+
+                    // update the turn
+                    myTurn = false;
+
+                    // get the game status
+                    if (gameStatus() == 0) {
+                        turn = flipChar(turn);
+                        tv_turn.setText(String.format(getString(R.string.their_turn),
+                                rival.getNick(), String.valueOf(flipChar(myTurnChar))));
+                        sendMove(board);
+                    } else if (gameStatus() == -1) {
+                        tv_turn.setText(getString(R.string.draw));
+                        sendDraw(board);
+                        stopMatch(myTurn);
+                    } else {
+                        sendWinner();
+                        stopMatch(myTurn);
                     }
                 } else {
-                    tv_turn.setText(getString(R.string.wait_turn));
+                    tv_turn.setText(getString(R.string.empty_square));
                 }
+            } else {
+                tv_turn.setText(getString(R.string.wait_turn));
             }
         };
     }

@@ -124,13 +124,11 @@ public class BridgefyListener {
                                 context.startActivity(intent);
 
                                 // repost to our newly created activity so it responds automatically
-                                new Handler().postDelayed(new Runnable() {
-                                    public void run() {
-                                        // post this event via the Otto plugin so our components can update their views
-                                        ottoBus.post(move);
-                                        // answer automatically if the current device is an Android Things device
-                                        ottoBus.post(move.getMatchId());
-                                    }
+                                new Handler().postDelayed(() -> {
+                                    // post this event via the Otto plugin so our components can update their views
+                                    ottoBus.post(move);
+                                    // answer automatically if the current device is an Android Things device
+                                    ottoBus.post(move.getMatchId());
                                 }, 1500);
                             } else {
                                 Log.w(TAG, "Incoming player unknown.");

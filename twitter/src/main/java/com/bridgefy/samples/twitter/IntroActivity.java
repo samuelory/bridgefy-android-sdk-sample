@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,11 +16,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.bridgefy.samples.twitter.entities.Tweet;
 import com.bridgefy.sdk.client.Bridgefy;
 import com.bridgefy.sdk.client.BridgefyClient;
 import com.bridgefy.sdk.client.Device;
-import com.bridgefy.sdk.client.MessageListener;
 import com.bridgefy.sdk.client.RegistrationListener;
 import com.bridgefy.sdk.client.Session;
 import com.bridgefy.sdk.client.StateListener;
@@ -55,7 +52,7 @@ public class IntroActivity extends AppCompatActivity {
         txtUsername.setText(username);;
 
 //        // Configure the Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 

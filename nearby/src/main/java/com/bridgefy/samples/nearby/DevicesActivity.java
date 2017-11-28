@@ -91,12 +91,7 @@ public class DevicesActivity extends AppCompatActivity {
         @Override
         public void onRegistrationFailed(int errorCode, String message) {
             Log.e(TAG, "onRegistrationFailed: failed with ERROR_CODE: " + errorCode + ", MESSAGE: " + message);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(DevicesActivity.this, "Bridgefy registration did not succeed.", Toast.LENGTH_LONG).show();
-                }
-            });
+            runOnUiThread(() -> Toast.makeText(DevicesActivity.this, "Bridgefy registration did not succeed.", Toast.LENGTH_LONG).show());
         }
     };
 

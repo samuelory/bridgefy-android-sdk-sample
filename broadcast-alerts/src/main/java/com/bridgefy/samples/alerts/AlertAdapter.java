@@ -45,10 +45,7 @@ public class AlertAdapter extends RecyclerView.Adapter<AlertAdapter.ViewHolder> 
         SimpleDateFormat format=new SimpleDateFormat("hh:mm");
         holder.mDateView.setText(format.format(date));
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
+        holder.mView.setOnClickListener(v -> {
         });
     }
 
@@ -74,9 +71,9 @@ public class AlertAdapter extends RecyclerView.Adapter<AlertAdapter.ViewHolder> 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.txt_user);
-            mContentView = (TextView) view.findViewById(R.id.txt_count);
-            mDateView = (TextView) view.findViewById(R.id.txt_date);
+            mIdView = view.findViewById(R.id.txt_user);
+            mContentView = view.findViewById(R.id.txt_count);
+            mDateView = view.findViewById(R.id.txt_date);
         }
 
         @Override

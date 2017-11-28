@@ -162,11 +162,9 @@ public class MatchActivity extends TicTacToeActivity {
         Bridgefy.sendBroadcastMessage(Bridgefy.createMessage(move.toHashMap()));
 
         // implement a timeout for the current match
-        new ScheduledThreadPoolExecutor(1).schedule(new Runnable() {
-            public void run() {
-                Log.w(TAG, "Timeout for matchId: " + matchId);
-                endMatch();
-            }
+        new ScheduledThreadPoolExecutor(1).schedule(() -> {
+            Log.w(TAG, "Timeout for matchId: " + matchId);
+            endMatch();
         }, 25, TimeUnit.MINUTES);
     }
 

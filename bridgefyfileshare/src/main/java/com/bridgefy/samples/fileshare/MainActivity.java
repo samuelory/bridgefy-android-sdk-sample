@@ -1,4 +1,4 @@
-package com.bridgefy.samples.chat;
+package com.bridgefy.samples.fileshare;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
@@ -15,14 +15,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bridgefy.samples.chat.entities.Peer;
+import com.bridgefy.samples.fileshare.entities.Peer;
 import com.bridgefy.sdk.client.Bridgefy;
 import com.bridgefy.sdk.client.BridgefyClient;
 import com.bridgefy.sdk.client.Device;
@@ -42,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     static final String INTENT_EXTRA_NAME = "peerName";
     static final String INTENT_EXTRA_UUID = "peerUuid";
-    static final String INTENT_EXTRA_TYPE = "deviceType";
     static final String INTENT_EXTRA_MSG  = "message";
-    static final String BROADCAST_CHAT    = "Broadcast";
 
     PeersRecyclerViewAdapter peersAdapter =
             new PeersRecyclerViewAdapter(new ArrayList<Peer>());
@@ -94,23 +90,6 @@ public class MainActivity extends AppCompatActivity {
             Bridgefy.stop();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_broadcast:
-                startActivity(new Intent(getBaseContext(), ChatActivity.class)
-                        .putExtra(INTENT_EXTRA_NAME, BROADCAST_CHAT)
-                        .putExtra(INTENT_EXTRA_UUID, BROADCAST_CHAT));
-                return true;
-        }
-        return false;
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -138,10 +117,9 @@ public class MainActivity extends AppCompatActivity {
                 Peer peer = new Peer(message.getSenderId(),
                         (String) message.getContent().get("device_name"));
                 peer.setNearby(true);
-                peer.setDeviceType(extractType(message));
                 peersAdapter.addPeer(peer);
 
-            // any other direct message should be treated as such
+                // any other direct message should be treated as such
             } else {
                 String incomingMessage = (String) message.getContent().get("text");
                 LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
@@ -159,32 +137,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        @Override
-        public void onBroadcastMessageReceived(Message message) {
-            // we should not expect to have connected previously to the device that originated
-            // the incoming broadcast message, so device information is included in this packet
-            String incomingMsg = (String) message.getContent().get("text");
-            String deviceName  = (String) message.getContent().get("device_name");
-            Peer.DeviceType deviceType = extractType(message);
-
-            LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
-                    new Intent(BROADCAST_CHAT)
-                            .putExtra(INTENT_EXTRA_NAME, deviceName)
-                            .putExtra(INTENT_EXTRA_TYPE, deviceType)
-                            .putExtra(INTENT_EXTRA_MSG,  incomingMsg));
-        }
     };
 
-    private Peer.DeviceType extractType(Message message) {
-        int eventOrdinal;
-        Object eventObj = message.getContent().get("device_type");
-        if (eventObj instanceof Double) {
-            eventOrdinal = ((Double) eventObj).intValue();
-        } else {
-            eventOrdinal = (Integer) eventObj;
-        }
-        return Peer.DeviceType.values()[eventOrdinal];
-    }
 
     StateListener stateListener = new StateListener() {
         @Override
@@ -192,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
             // send our information to the Device
             HashMap<String, Object> map = new HashMap<>();
             map.put("device_name", Build.MANUFACTURER + " " + Build.MODEL);
-            map.put("device_type", Peer.DeviceType.ANDROID.ordinal());
             device.sendMessage(map);
         }
 
@@ -208,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (errorCode == StateListener.INSUFFICIENT_PERMISSIONS) {
                 ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
             }
         }
     };
@@ -301,15 +254,6 @@ public class MainActivity extends AppCompatActivity {
             void setPeer(Peer peer) {
                 this.peer = peer;
 
-                switch (peer.getDeviceType()) {
-                    case ANDROID:
-                        this.mContentView.setText(peer.getDeviceName() + " (android)");
-                        break;
-
-                    case IPHONE:
-                        this.mContentView.setText(peer.getDeviceName() + " (iPhone)");
-                        break;
-                }
 
                 if (peer.isNearby()) {
                     this.mContentView.setTextColor(Color.BLACK);
@@ -319,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), ChatActivity.class)
+                startActivity(new Intent(getBaseContext(), FileActivity.class)
                         .putExtra(INTENT_EXTRA_NAME, peer.getDeviceName())
                         .putExtra(INTENT_EXTRA_UUID, peer.getUuid()));
             }
