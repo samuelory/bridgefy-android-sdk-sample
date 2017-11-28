@@ -47,10 +47,8 @@ android {
              artifactUrls=["http://jcenter.bintray.com/"]
               }
         ...
-
         }
     ...
-
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
