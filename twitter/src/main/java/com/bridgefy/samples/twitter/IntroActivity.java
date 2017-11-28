@@ -66,18 +66,6 @@ public class IntroActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        if (isFinishing()) {
-            try {
-                Bridgefy.stop();
-            } catch (IllegalStateException ise) {
-            }
-        }
-    }
-
 
     /**
      *      BRIDGEFY FRAMEWORK METHODS AND OBJECTS

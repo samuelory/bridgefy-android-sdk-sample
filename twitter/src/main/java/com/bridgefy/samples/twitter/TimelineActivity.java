@@ -74,6 +74,19 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
         Bridgefy.setMessageListener(tweetManager = new TweetManager(username, this));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (isFinishing()) {
+            try {
+                Bridgefy.stop();
+            } catch (IllegalStateException ise) {
+                ise.printStackTrace();
+            }
+        }
+    }
+
 
     /**
      *      ACTION AND INTERFACE METHODS
