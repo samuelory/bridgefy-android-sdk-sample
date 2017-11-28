@@ -37,14 +37,12 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
 
     @BindView(R.id.txtTweet)
     EditText txtMessage;
-
     @BindView(R.id.gatewaySwitch)
     ToggleButton gatewaySwitch;
 
     TweetManager tweetManager;
 
-    TweetsRecyclerViewAdapter tweetsAdapter =
-            new TweetsRecyclerViewAdapter(new ArrayList<Tweet>());
+    TweetsRecyclerViewAdapter tweetsAdapter = new TweetsRecyclerViewAdapter(new ArrayList<>());
 
 
     @Override
@@ -95,6 +93,10 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
     public void onGatewaySwitched(ToggleButton gatewaySwitch) {
         Log.d(TAG, "Internet relaying toggled: " +  gatewaySwitch.isChecked());
         tweetManager.setGateway(gatewaySwitch.isChecked());
+
+        if (gatewaySwitch.isChecked()) {
+            flushTweets();
+        }
     }
 
     @OnClick(R.id.gatewayHelp)
@@ -128,6 +130,14 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
     public void onTweetPosted(Tweet tweet) {
         tweetsAdapter.refreshTweetView(tweet);
     }
+
+    public void flushTweets() {
+        for (Tweet tweet : tweetsAdapter.tweets) {
+            if (!tweet.isPosted())
+                tweetManager.postTweet(tweet);
+        }
+    }
+
 
     /**
      *      RECYCLER VIEW CLASSES
