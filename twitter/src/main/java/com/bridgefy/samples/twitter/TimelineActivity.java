@@ -1,6 +1,14 @@
 package com.bridgefy.samples.twitter;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.bridgefy.samples.twitter.IntroActivity.INTENT_USERNAME;
+import static com.bridgefy.samples.twitter.NetworkStateReceiver.WIFI_STATE_CONNECTED;
 
 
 public class TimelineActivity extends AppCompatActivity implements TweetManager.TweetListener {
@@ -41,6 +50,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
     ToggleButton gatewaySwitch;
 
     TweetManager tweetManager;
+    WifiReceiver wifiReceiver;
 
     TweetsRecyclerViewAdapter tweetsAdapter = new TweetsRecyclerViewAdapter(new ArrayList<>());
 
@@ -56,7 +66,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
         txtMessage.setFilters(new InputFilter[] { new InputFilter.LengthFilter(138 - username.length()) });
 
         // Configure the Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         gatewaySwitch.setChecked(true);
 
@@ -70,12 +80,22 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
         // Set the Bridgefy MessageListener
         Log.d(TAG, "Setting new State and Message Listeners");
         Bridgefy.setMessageListener(tweetManager = new TweetManager(username, this));
+
+        // register the connected receiver
+        wifiReceiver = new WifiReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(wifiReceiver, wifiReceiver.getIntentFilter());
+//        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(wifiReceiver);
+//        unregisterReceiver(wifiReceiver);
         if (isFinishing()) {
             try {
                 Bridgefy.stop();
@@ -83,6 +103,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
                 ise.printStackTrace();
             }
         }
+        super.onDestroy();
     }
 
 
@@ -132,11 +153,41 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
     }
 
     public void flushTweets() {
-        for (Tweet tweet : tweetsAdapter.tweets) {
-            if (!tweet.isPosted())
-                tweetManager.postTweet(tweet);
+        if (tweetsAdapter != null) {
+            for (Tweet tweet : tweetsAdapter.tweets) {
+                if (!tweet.isPosted())
+                    tweetManager.postTweet(tweet);
+            }
         }
     }
+
+    public class WifiReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive");
+            if (NetworkStateReceiver.WIFI_STATE_CONNECTED.equals(intent.getAction())) {
+                flushTweets();
+            }
+
+//            if (WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION.equals(intent.getAction())) {
+//                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//                if (connectivityManager != null) {
+//                    NetworkInfo mWifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+//                    if (mWifi != null && mWifi.isConnected()) {
+//                        Log.i(TAG, "isConnected!");
+//                        flushTweets();
+//                    }
+//                }
+//            }
+        }
+
+        public IntentFilter getIntentFilter() {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(NetworkStateReceiver.WIFI_STATE_CONNECTED);
+            return intentFilter;
+        }
+    }
+
 
 
     /**
