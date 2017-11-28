@@ -20,7 +20,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive");
+        Log.d(TAG, "onReceive: " + intent.getAction());
         NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
         if (info != null && info.isConnected()) {
             Log.i(TAG, "isConnected!");
