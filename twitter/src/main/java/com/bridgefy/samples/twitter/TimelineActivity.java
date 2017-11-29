@@ -106,12 +106,11 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
      */
     @OnClick(R.id.gatewaySwitch)
     public void onGatewaySwitched(ToggleButton gatewaySwitch) {
-        Log.d(TAG, "Internet relaying toggled: " +  gatewaySwitch.isChecked());
+        Log.i(TAG, "Internet relaying toggled: " +  gatewaySwitch.isChecked());
         tweetManager.setGateway(gatewaySwitch.isChecked());
 
-        if (gatewaySwitch.isChecked()) {
+        if (gatewaySwitch.isChecked())
             flushTweets();
-        }
     }
 
     @OnClick(R.id.gatewayHelp)
@@ -158,7 +157,6 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
     private BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive: " + intent.getAction());
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
                 Log.i(TAG, "Connected!");
                 flushTweets();
