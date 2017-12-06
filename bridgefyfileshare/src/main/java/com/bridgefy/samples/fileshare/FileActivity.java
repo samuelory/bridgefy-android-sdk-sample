@@ -16,18 +16,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.bridgefy.samples.fileshare.R;
-import com.bridgefy.samples.fileshare.entities.Message;
-import com.bridgefy.samples.fileshare.entities.Peer;
-import com.bridgefy.sdk.client.BFEngineProfile;
+import com.bridgefy.samples.fileshare.entities.BridgefyFile;
 import com.bridgefy.sdk.client.Bridgefy;
-import com.bridgefy.sdk.client.Device;
-import com.bridgefy.sdk.framework.controller.DeviceManager;
+import com.bridgefy.sdk.client.Message;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
+
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,7 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -72,16 +68,21 @@ public class FileActivity  extends AppCompatActivity {
             ab.setTitle(conversationName);
             ab.setDisplayHomeAsUpEnabled(true);
         }
+        Log.i("C", "onCreate: conversation id is "+conversationId);
 
-        // register the receiver to listen for incoming messages
+        // register the receiver to listen for incoming bridgefyFiles
         LocalBroadcastManager.getInstance(getBaseContext())
                 .registerReceiver(new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        Message message = new Message(intent.getStringExtra(MainActivity.INTENT_EXTRA_MSG));
-                        message.setDeviceName(intent.getStringExtra(MainActivity.INTENT_EXTRA_NAME));
-                        message.setDirection(Message.INCOMING_MESSAGE);
-                        messagesAdapter.addMessage(message);
+                        Log.i(TAG, "onReceive: received message to adapter");
+                        Message message = intent.getParcelableExtra(MainActivity.INTENT_EXTRA_MSG);
+                        byte[] fileBytes = message.getData();
+                        BridgefyFile bridgefyFile = new BridgefyFile((String)message.getContent().get("file"));
+                        bridgefyFile.setData(fileBytes);
+                        bridgefyFile.setDeviceName(intent.getStringExtra(MainActivity.INTENT_EXTRA_NAME));
+                        bridgefyFile.setDirection(BridgefyFile.INCOMING_FILE);
+                        messagesAdapter.addMessage(bridgefyFile);
                     }
                 }, new IntentFilter(conversationId));
 
@@ -109,35 +110,6 @@ public class FileActivity  extends AppCompatActivity {
                 .withHiddenFiles(true) // Show hidden files and folders
                 .start();
 
-
-
-        // get the message and push it to the views
-//        String messageString = txtMessage.getText().toString();
-//        if (messageString.trim().length() > 0) {
-//            // update the views
-//            txtMessage.setText("");
-//            Message message = new Message(messageString);
-//            message.setDirection(Message.OUTGOING_MESSAGE);
-//            messagesAdapter.addMessage(message);
-//
-//            // create a HashMap object to send
-//            HashMap<String, Object> content = new HashMap<>();
-//            content.put("text", messageString);
-//
-//            // send message text to device
-//            if (conversationId.equals(MainActivity.BROADCAST_CHAT)) {
-//                // we put extra information in broadcast packets since they won't be bound to a session
-//                content.put("device_name", Build.MANUFACTURER + " " + Build.MODEL);
-//                content.put("device_type", Peer.DeviceType.ANDROID.ordinal());
-//                Bridgefy.sendBroadcastMessage(
-//                        Bridgefy.createMessage(content),
-//                        BFEngineProfile.BFConfigProfileLongReach);
-//            } else {
-//                Bridgefy.sendMessage(
-//                        Bridgefy.createMessage(conversationId, content),
-//                        BFEngineProfile.BFConfigProfileLongReach);
-//            }
-//        }
     }
 
     @Override
@@ -155,8 +127,18 @@ public class FileActivity  extends AppCompatActivity {
                 FileInputStream fin = new FileInputStream(file);
                 fin.read(fileContent);
                 HashMap<String, Object> content = new HashMap<>();
-                content.put("device_name", Build.MANUFACTURER + " " + Build.MODEL);
-                Bridgefy.sendMessage(Bridgefy.createMessage(conversationId, content));
+                content.put("file",file.getName());
+
+                com.bridgefy.sdk.client.Message.Builder builder=new com.bridgefy.sdk.client.Message.Builder();
+                com.bridgefy.sdk.client.Message message = builder.setReceiverId(conversationId).setContent(content).setData(fileContent).build();
+                Bridgefy.sendMessage(message);
+                BridgefyFile bridgefyFile = new BridgefyFile(filePath);
+                bridgefyFile.setDirection(BridgefyFile.OUTGOING_FILE);
+                bridgefyFile.setData(fileContent);
+                messagesAdapter.addMessage(bridgefyFile);
+
+
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -174,25 +156,25 @@ public class FileActivity  extends AppCompatActivity {
     class MessagesRecyclerViewAdapter
             extends RecyclerView.Adapter<MessagesRecyclerViewAdapter.MessageViewHolder> {
 
-        private final List<Message> messages;
+        private final List<BridgefyFile> bridgefyFiles;
 
-        MessagesRecyclerViewAdapter(List<Message> messages) {
-            this.messages = messages;
+        MessagesRecyclerViewAdapter(List<BridgefyFile> bridgefyFiles) {
+            this.bridgefyFiles = bridgefyFiles;
         }
 
         @Override
         public int getItemCount() {
-            return messages.size();
+            return bridgefyFiles.size();
         }
 
-        void addMessage(Message message) {
-            messages.add(0, message);
+        void addMessage(BridgefyFile bridgefyFile) {
+            bridgefyFiles.add(0, bridgefyFile);
             notifyDataSetChanged();
         }
 
         @Override
         public int getItemViewType(int position) {
-            return messages.get(position).getDirection();
+            return bridgefyFiles.get(position).getDirection();
         }
 
         @Override
@@ -200,11 +182,11 @@ public class FileActivity  extends AppCompatActivity {
             View messageView = null;
 
             switch (viewType) {
-                case Message.INCOMING_MESSAGE:
+                case BridgefyFile.INCOMING_FILE:
                     messageView = LayoutInflater.from(viewGroup.getContext()).
                             inflate((R.layout.message_row_incoming), viewGroup, false);
                     break;
-                case Message.OUTGOING_MESSAGE:
+                case BridgefyFile.OUTGOING_FILE:
                     messageView = LayoutInflater.from(viewGroup.getContext()).
                             inflate((R.layout.message_row_outgoing), viewGroup, false);
                     break;
@@ -215,21 +197,21 @@ public class FileActivity  extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final MessageViewHolder messageHolder, int position) {
-            messageHolder.setMessage(messages.get(position));
+            messageHolder.setBridgefyFile(bridgefyFiles.get(position));
         }
 
         class MessageViewHolder extends RecyclerView.ViewHolder {
             final TextView txtMessage;
-            Message message;
+            BridgefyFile bridgefyFile;
 
             MessageViewHolder(View view) {
                 super(view);
                 txtMessage = view.findViewById(R.id.txtMessage);
             }
 
-            void setMessage(Message message) {
-                this.message = message;
-                    this.txtMessage.setText(message.getText());
+            void setBridgefyFile(BridgefyFile bridgefyFile) {
+                this.bridgefyFile = bridgefyFile;
+                    this.txtMessage.setText(bridgefyFile.getFilePath() + " File size "+bridgefyFile.getData().length);
 
             }
         }

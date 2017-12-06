@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.bridgefy.samples.fileshare.entities.Peer;
 import com.bridgefy.sdk.client.Bridgefy;
 import com.bridgefy.sdk.client.BridgefyClient;
+import com.bridgefy.sdk.client.Config;
 import com.bridgefy.sdk.client.Device;
 import com.bridgefy.sdk.client.Message;
 import com.bridgefy.sdk.client.MessageListener;
@@ -34,13 +35,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
 public class MainActivity extends AppCompatActivity {
 
     private String TAG = "MainActivity";
 
     static final String INTENT_EXTRA_NAME = "peerName";
     static final String INTENT_EXTRA_UUID = "peerUuid";
-    static final String INTENT_EXTRA_MSG  = "message";
+    static final String INTENT_EXTRA_MSG  = "bridgefyFile";
 
     PeersRecyclerViewAdapter peersAdapter =
             new PeersRecyclerViewAdapter(new ArrayList<Peer>());
@@ -61,11 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        if (isThingsDevice(this)) {
-            //enabling bluetooth automatically
-            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            bluetoothAdapter.enable();
-        }
+
 
         Bridgefy.initialize(getApplicationContext(), new RegistrationListener() {
             @Override
@@ -101,17 +100,17 @@ public class MainActivity extends AppCompatActivity {
      *      BRIDGEFY METHODS
      */
     private void startBridgefy() {
-        Bridgefy.start(messageListener, stateListener);
+        Config.Builder builder=new Config.Builder();
+        builder.setAntennaType(Config.Antenna.BLUETOOTH);
+        Bridgefy.start(messageListener, stateListener,builder.build());
     }
 
-    public boolean isThingsDevice(Context context) {
-        final PackageManager pm = context.getPackageManager();
-        return pm.hasSystemFeature("android.hardware.type.embedded");
-    }
+
 
     private MessageListener messageListener = new MessageListener() {
         @Override
         public void onMessageReceived(Message message) {
+            Log.i(TAG, "onMessageReceived: ");
             // direct messages carrying a Device name represent device handshakes
             if (message.getContent().get("device_name") != null) {
                 Peer peer = new Peer(message.getSenderId(),
@@ -119,22 +118,14 @@ public class MainActivity extends AppCompatActivity {
                 peer.setNearby(true);
                 peersAdapter.addPeer(peer);
 
-                // any other direct message should be treated as such
+                // any other direct bridgefyFile should be treated as such
             } else {
-                String incomingMessage = (String) message.getContent().get("text");
+                Log.i(TAG, "onMessageReceived: sending broadcast to "+message.getSenderId());
                 LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
                         new Intent(message.getSenderId())
-                                .putExtra(INTENT_EXTRA_MSG, incomingMessage));
+                                .putExtra(INTENT_EXTRA_MSG, message));
             }
 
-            if (isThingsDevice(MainActivity.this)) {
-                //if it's an Android Things device, reply automatically
-                HashMap<String, Object> content = new HashMap<>();
-                content.put("text", "Beep boop. I'm a bot.");
-                Message replyMessage = Bridgefy.createMessage(message.getSenderId(), content);
-                Bridgefy.sendMessage(replyMessage);
-
-            }
         }
 
     };
@@ -253,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
             void setPeer(Peer peer) {
                 this.peer = peer;
+                this.mContentView.setText(peer.getDeviceName());
 
 
                 if (peer.isNearby()) {

@@ -6,17 +6,18 @@ import com.google.gson.Gson;
  * @author dekaru on 5/9/17.
  */
 
-public class Message {
+public class BridgefyFile {
 
-    public final static int INCOMING_MESSAGE = 0;
-    public final static int OUTGOING_MESSAGE = 1;
+    public final static int INCOMING_FILE = 0;
+    public final static int OUTGOING_FILE = 1;
 
     private int    direction;
     private String deviceName;
-    private String text;
+    private String filePath;
+    private byte[] data;
 
-    public Message(String text) {
-        this.text = text;
+    public BridgefyFile(String text) {
+        this.filePath = text;
     }
 
 
@@ -32,8 +33,8 @@ public class Message {
         return deviceName;
     }
 
-    public String getText() {
-        return text;
+    public String getFilePath() {
+        return filePath;
     }
 
     public void setDeviceName(String deviceName) {
@@ -41,12 +42,20 @@ public class Message {
     }
 
 
-    public static Message create(String json) {
-        return new Gson().fromJson(json, Message.class);
+    public static BridgefyFile create(String json) {
+        return new Gson().fromJson(json, BridgefyFile.class);
     }
 
     @Override
     public String toString() {
         return new Gson().toJson(this);
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public byte[] getData() {
+        return data;
     }
 }
