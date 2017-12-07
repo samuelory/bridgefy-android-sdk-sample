@@ -164,7 +164,7 @@ HashMap<String, Object> data = new HashMap<>();
 data.put("foo","Hello world");
 
 // Create a message with the HashMap and the recipient's id
-Message message = Bridgefy.createMessage(device.getUserId(), data);
+Message message =new Message.Builder().setContent(data).setReceiverId(device.getUserId()).build();
 
 // Send the message to the specified recipient
 Bridgefy.sendMessage(message);
