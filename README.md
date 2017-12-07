@@ -39,19 +39,17 @@ In order to include the Bridgefy SDK in your project, first add the Bridgefy mav
 ```java
 
 android {
-....
-
+    ...
     repositories {
-      ...
-
-            maven {
+         ...
+         maven {
              url "http://maven.bridgefy.com/artifactory/libs-release-local"
              artifactUrls=["http://jcenter.bintray.com/"]
               }
- ....
+        ...
+
         }
-        
-....
+    ...
 
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
@@ -69,26 +67,28 @@ implementation 'com.bridgefy:android-sdk:1.1.+'
 ```
 
 ## Initialize Bridgefy ##
-The Bridgefy SDK needs only a call to the static **initialize()** method in order to create all required objects and to be ready to start operations. This call requires an active Internet connection on the device in order to check the status of your Bridgefy license. As long as your license is valid, an Internet connection won't be needed again until the time comes to renew or update it.
-                                                                                                                                                      
-                                                                                                                                                      The result of the initialization will be delivered asynchronously to your **RegistrationListener** callback. 
+The Bridgefy SDK needs only a call to the static **initialize()** method in order to create all
+required objects and to be ready to start operations.
+
+The result of the initialization will be delivered
+asynchronously to the **RegistrationListener** object.
 
 ```java
 //Always use the Application context to avoid leaks
-Bridgefy.initialize(getApplicationContext(), XXXXXXXX-XXXX-XXXX-XXXX-XXXX,         Bridgefy.initialize(getApplicationContext(), new RegistrationListener() {
-@Override
-public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
-    // Bridgefy is ready to start
+Bridgefy.initialize(getApplicationContext(), XXXXXXXX-XXXX-XXXX-XXXX-XXXX, new RegistrationListener() {
+    @Override
+    public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
+        // Bridgefy is ready to start
+        Bridgefy.start(messageListener, stateListener);
     }
-
-@Override
-public void onRegistrationFailed(int errorCode, String message) {
-    // Something went wrong: handle error code, maybe print the message
-    ...    
-    }
-})
+    
+    @Override
+    public void onRegistrationFailed(int errorCode, String message) {
+        // Something went wrong: handle error code, maybe print the message
+        ...    
+});
 ```
-Alternatively, you can provide a null argument instead of the **apiKey** if you included it in your **AndroidManifest.xml** file.
+Alternatively, you can provide a **null** argument instead of the **API_KEY** if you included one in your **AndroidManifest.xml** file.
 
 ```xml
 <meta-data
@@ -96,6 +96,7 @@ Alternatively, you can provide a null argument instead of the **apiKey** if you 
         android:value="..." />
 ```
 
+This call requires an active Internet connection on the device in order to check the status of your Bridgefy license. As long as your license is valid, an Internet connection won't be needed again until the time comes to renew or update it.
 
 The following error codes may be returned if something went wrong:
 
@@ -111,23 +112,26 @@ A unique **userId** string is also generated locally  for your convenience in or
 
 
 ## Starting Operations ##
-Once the registration has been successful you will now be ready to start the Bridgefy SDK. Use the following method to begin the process of nearby devices discovery as well as to begin advertising your presence to other devices.
+Once the Bridgefy SDK has been correctly registered the **onRegistrationSuccessful** method
+is called and we are now ready to start the Bridgefy SDK.
+Use the following method to begin the process of nearby devices discovery as well as to advertise presence to other devices.
 
 
 
 ```java
-Bridgefy.start(messageListener,stateListener);
+Bridgefy.start(messageListener, stateListener);
 ```
 
-You can also use a custom **Config** object to set additional options
+You can also provide a custom **Config** object to set additional options
 
 
 
 ```java
 Config.Builder builder = new Config.Builder();
-builder.setEnergyProfile(BFEnergyProfile.HIGH_PERFORMANCE);
-builder.setEncryption(false);
-Bridgefy.start(messageListener,stateListener,builder.build());
+    builder.setEnergyProfile(BFEnergyProfile.HIGH_PERFORMANCE);
+    builder.setEncryption(false);
+    
+Bridgefy.start(messageListener, stateListener, builder.build());
 ```
 
 
@@ -160,8 +164,7 @@ HashMap<String, Object> data = new HashMap<>();
 data.put("foo","Hello world");
 
 // Create a message with the HashMap and the recipient's id
-Message message =new Message.Builder().setContent(data).setReceiverId(device.getUserId()).build();
-
+Message message = Bridgefy.createMessage(device.getUserId(), data);
 
 // Send the message to the specified recipient
 Bridgefy.sendMessage(message);
