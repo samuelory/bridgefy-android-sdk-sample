@@ -151,10 +151,11 @@ public class BridgefyListener {
                     ottoBus.post(RefuseMatch.create(message));
 
                     // let iPhone devices know we're available (not required on Android)
-                    Bridgefy.sendBroadcastMessage(Bridgefy.createMessage(
-                            new Event<>(
-                                    Event.EventType.AVAILABLE,
-                                    this).toHashMap()));
+
+
+                    Bridgefy.sendBroadcastMessage(new Event<>(
+                            Event.EventType.AVAILABLE,
+                            this).toHashMap());
                     break;
 
                 case AVAILABLE:

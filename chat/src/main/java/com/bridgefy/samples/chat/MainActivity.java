@@ -153,8 +153,10 @@ public class MainActivity extends AppCompatActivity {
                 //if it's an Android Things device, reply automatically
                 HashMap<String, Object> content = new HashMap<>();
                 content.put("text", "Beep boop. I'm a bot.");
-                Message replyMessage = Bridgefy.createMessage(message.getSenderId(), content);
-                Bridgefy.sendMessage(replyMessage);
+
+                Message.Builder builder=new Message.Builder();
+                builder.setContent(content).setReceiverId(message.getSenderId());
+                Bridgefy.sendMessage(builder.build());
 
             }
         }

@@ -82,8 +82,8 @@ public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
     }
 
 @Override
-public void onRegistrationFailed(int errorCode, String bridgefyFile) {
-    // Something went wrong: handle error code, maybe print the bridgefyFile
+public void onRegistrationFailed(int errorCode, String message) {
+    // Something went wrong: handle error code, maybe print the message
     ...    
     }
 })
@@ -100,7 +100,7 @@ Alternatively, you can provide a null argument instead of the **apiKey** if you 
 The following error codes may be returned if something went wrong:
 
 ```php
--66    registration failed (check specific reason in bridgefyFile)
+-66    registration failed (check specific reason in message)
 -1     registration failed due to a communications error (e.g. no Internet available)
 -2     registration failed due to a misconfiguration issue
 -3     registration failed due to an expired or unauthorized license
@@ -159,41 +159,41 @@ In order to send Messages you will need to build a **Message** object which is b
 HashMap<String, Object> data = new HashMap<>();
 data.put("foo","Hello world");
 
-// Create a bridgefyFile with the HashMap and the recipient's id
-Message bridgefyFile = Bridgefy.createMessage(device.getUserId(), data);
+// Create a message with the HashMap and the recipient's id
+Message message =new Message.Builder().setContent(data).setReceiverId(device.getUserId()).build();
 
-// Send the bridgefyFile to the specified recipient
-Bridgefy.sendMessage(bridgefyFile);
+
+// Send the message to the specified recipient
+Bridgefy.sendMessage(message);
 ```
 
-You can send bridgefyFiles to other devices even if they haven't been reported as connected or in-range. The Bridgefy SDK will do the best effort to deliver the bridgefyFile to it's recipient through intermediate devices. Message content is secured through a 256-bit encryption which is managed seamlessly for you so you don't have to worry about other users tapping into your private bridgefyFile.
+You can send messages to other devices even if they haven't been reported as connected or in-range. The Bridgefy SDK will do the best effort to deliver the message to it's recipient through intermediate devices. Message content is secured through a 256-bit encryption which is managed seamlessly for you so you don't have to worry about other users tapping into your private message.
 
-You can also send public bridgefyFiles which will be propagated to all nearby devices. Those are even easier to send:
+You can also send public messages which will be propagated to all nearby devices. Those are even easier to send:
 
 ```java
-// Create a Message object with just the HashMap as a parameter
-Message broadcastMessage = Bridgefy.createMessage(data);
-Bridgefy.sendBroadcastMessage(broadcastMessage);
+// Send a Broadcast Message with just the HashMap as a parameter
+Bridgefy.sendBroadcastMessage(data);
 ```
 
-The MessageListener callback will inform you of new bridgefyFiles that you have received. Check the Javadoc documentation for the full list of method callbacks.
+The MessageListener callback will inform you of new messages that you have received. Check the Javadoc documentation for the full list of method callbacks.
 
   
 ```java
 @Override
-    public void onMessageReceived(Message bridgefyFile) {
-    // Do something with the received bridgefyFile
+    public void onMessageReceived(Message message) {
+    // Do something with the received message
     ...
 }
 
 @Override
-    public void onBroadcastMessageReceived(Message bridgefyFile) {
-    // Public bridgefyFile sent to all nearby devices
+    public void onBroadcastMessageReceived(Message message) {
+    // Public message sent to all nearby devices
     ...
 }
 ```
 
-**Note.- Occasionally, the Bridgefy SDK may produce a duplicated call on these methods some time after the bridgefyFile was first received. Depending on your implementation, you might want to prepare for these scenarios.**
+**Note.- Occasionally, the Bridgefy SDK may produce a duplicated call on these methods some time after the message was first received. Depending on your implementation, you might want to prepare for these scenarios.**
 
 ## Stopping Bridgefy ##
 Once you have put on a show, always make sure to stop the Bridgefy instance in order to free up device resources.

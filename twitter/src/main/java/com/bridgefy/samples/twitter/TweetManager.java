@@ -83,8 +83,7 @@ class TweetManager extends MessageListener {
             // broadcast the tweet only if it was ours or if post was successful
             if (tweet.getSender().equals(username) || tweet.isPosted()) {
                 Log.v(TAG, tweet.toString());
-                Bridgefy.sendBroadcastMessage(
-                        Bridgefy.createMessage(tweet.toHashMap()));
+                Bridgefy.sendBroadcastMessage(tweet.toHashMap());
 
                 if (tweet.isPosted())
                     tweetListener.onTweetPosted(tweet);

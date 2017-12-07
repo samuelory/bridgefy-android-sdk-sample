@@ -115,12 +115,17 @@ public class ChatActivity extends AppCompatActivity {
                 // we put extra information in broadcast packets since they won't be bound to a session
                 content.put("device_name", Build.MANUFACTURER + " " + Build.MODEL);
                 content.put("device_type", Peer.DeviceType.ANDROID.ordinal());
-                Bridgefy.sendBroadcastMessage(
-                        Bridgefy.createMessage(content),
+
+                com.bridgefy.sdk.client.Message.Builder builder=new com.bridgefy.sdk.client.Message.Builder();
+                builder.setContent(content);
+                Bridgefy.sendBroadcastMessage(builder.build(),
                         BFEngineProfile.BFConfigProfileLongReach);
             } else {
-                Bridgefy.sendMessage(
-                        Bridgefy.createMessage(conversationId, content),
+
+                com.bridgefy.sdk.client.Message.Builder builder=new com.bridgefy.sdk.client.Message.Builder();
+                builder.setContent(content).setReceiverId(conversationId);
+
+                Bridgefy.sendMessage(builder.build(),
                         BFEngineProfile.BFConfigProfileLongReach);
             }
         }
