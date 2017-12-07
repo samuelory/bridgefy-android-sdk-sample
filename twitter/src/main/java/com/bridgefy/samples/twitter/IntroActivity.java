@@ -63,18 +63,6 @@ public class IntroActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        if (isFinishing()) {
-            try {
-                Bridgefy.stop();
-            } catch (IllegalStateException ise) {
-            }
-        }
-    }
-
 
     /**
      *      BRIDGEFY FRAMEWORK METHODS AND OBJECTS
@@ -155,11 +143,11 @@ public class IntroActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // Start Bridgefy
             startBridgefy();
 
-        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+        } else {
             Toast.makeText(this, "Location permissions needed to start peers discovery.", Toast.LENGTH_SHORT).show();
         }
     }

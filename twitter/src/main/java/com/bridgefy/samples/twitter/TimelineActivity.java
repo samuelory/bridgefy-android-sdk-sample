@@ -1,6 +1,14 @@
 package com.bridgefy.samples.twitter;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.bridgefy.samples.twitter.IntroActivity.INTENT_USERNAME;
+import static com.bridgefy.samples.twitter.NetworkStateReceiver.WIFI_STATE_CONNECTED;
 
 
 public class TimelineActivity extends AppCompatActivity implements TweetManager.TweetListener {
@@ -37,14 +46,12 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
 
     @BindView(R.id.txtTweet)
     EditText txtMessage;
-
     @BindView(R.id.gatewaySwitch)
     ToggleButton gatewaySwitch;
 
     TweetManager tweetManager;
 
-    TweetsRecyclerViewAdapter tweetsAdapter =
-            new TweetsRecyclerViewAdapter(new ArrayList<Tweet>());
+    TweetsRecyclerViewAdapter tweetsAdapter = new TweetsRecyclerViewAdapter(new ArrayList<>());
 
 
     @Override
@@ -72,6 +79,25 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
         // Set the Bridgefy MessageListener
         Log.d(TAG, "Setting new State and Message Listeners");
         Bridgefy.setMessageListener(tweetManager = new TweetManager(username, this));
+
+        // register the connected receiver
+//        LocalBroadcastManager.getInstance(this).registerReceiver(wifiReceiver, wifiReceiver.getIntentFilter());
+        getApplicationContext().registerReceiver(wifiReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    protected void onDestroy() {
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(wifiReceiver);
+        unregisterReceiver(wifiReceiver);
+        if (isFinishing()) {
+            try {
+                Bridgefy.stop();
+            } catch (IllegalStateException ise) {
+                ise.printStackTrace();
+            }
+        }
+        super.onDestroy();
     }
 
 
@@ -80,8 +106,11 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
      */
     @OnClick(R.id.gatewaySwitch)
     public void onGatewaySwitched(ToggleButton gatewaySwitch) {
-        Log.d(TAG, "Internet relaying toggled: " +  gatewaySwitch.isChecked());
+        Log.i(TAG, "Internet relaying toggled: " +  gatewaySwitch.isChecked());
         tweetManager.setGateway(gatewaySwitch.isChecked());
+
+        if (gatewaySwitch.isChecked())
+            flushTweets();
     }
 
     @OnClick(R.id.gatewayHelp)
@@ -115,6 +144,29 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
     public void onTweetPosted(Tweet tweet) {
         tweetsAdapter.refreshTweetView(tweet);
     }
+
+    public void flushTweets() {
+        if (tweetsAdapter != null) {
+            for (Tweet tweet : tweetsAdapter.tweets) {
+                if (!tweet.isPosted())
+                    tweetManager.postTweet(tweet);
+            }
+        }
+    }
+
+    private BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
+                Log.i(TAG, "Connected!");
+                flushTweets();
+            } else {
+                Log.e(TAG, "No Connectivity!");
+            }
+        }
+    };
+
+
 
     /**
      *      RECYCLER VIEW CLASSES
