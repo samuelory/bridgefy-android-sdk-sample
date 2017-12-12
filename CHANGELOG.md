@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 
-## [1.1.1] - 2017-12-06
+## [1.1.1] - 2017-12-12
 ### Added
 - Updated SDK version to 1.1.1
 - Fixed a connectivity issue in Bluetooth LE mode
