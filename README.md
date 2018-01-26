@@ -227,11 +227,13 @@ If you are using Proguard in your project, include the following lines to your c
 
 ## Supported Devices ##
 
-As of November 2017, the following devices have been tested with Bridgefy and offer the best performance:
+As of January 2018, the following devices have been tested with Bridgefy and offer the best performance:
+* Google Pixel 2
 * Google Pixel
 * Nexus 6P
 * Nexus 5X
 * Nexus 6
+* Samsung Galaxy S8
 * Samsung Galaxy S7
 * Samsung Galaxy S6
 * Moto Z
@@ -241,6 +243,7 @@ As of November 2017, the following devices have been tested with Bridgefy and of
 * Moto E 2nd gen
 * OnePlus One
 * OnePlus 3T
+* OnePlus 5
 * Sony Xperia Z5
 * Sony Xperia Z5 Compact
 * Raspbery Pi 3 (Android Things)
