@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.5] - 2018-01-22
+### Changed
+- Solved a bug that caused errors when receiving binary data from iOS devices
 
 ## [1.1.4] - 2018-01-22
 ### Changed
