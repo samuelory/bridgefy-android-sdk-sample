@@ -1,4 +1,4 @@
-# Bridgefy Android SDK v 1.0 #
+# Bridgefy Android SDK v 1.1 #
 
 # Quick Start Guide #
 
@@ -61,7 +61,7 @@ android {
 Then, add the dependency:
 
 ```xml
-implementation 'com.bridgefy:android-sdk:1.0.+'
+implementation 'com.bridgefy:android-sdk:1.1.+'
 ```
 
 ## Initialize Bridgefy ##
@@ -162,7 +162,7 @@ HashMap<String, Object> data = new HashMap<>();
 data.put("foo","Hello world");
 
 // Create a message with the HashMap and the recipient's id
-Message message = Bridgefy.createMessage(device.getUserId(), data);
+Message message =new Message.Builder().setContent(data).setReceiverId(device.getUserId()).build();
 
 // Send the message to the specified recipient
 Bridgefy.sendMessage(message);
@@ -173,9 +173,8 @@ You can send messages to other devices even if they haven't been reported as con
 You can also send public messages which will be propagated to all nearby devices. Those are even easier to send:
 
 ```java
-// Create a Message object with just the HashMap as a parameter
-Message broadcastMessage = Bridgefy.createMessage(data);
-Bridgefy.sendBroadcastMessage(broadcastMessage);
+// Send a Broadcast Message with just the HashMap as a parameter
+Bridgefy.sendBroadcastMessage(data);
 ```
 
 The MessageListener callback will inform you of new messages that you have received. Check the Javadoc documentation for the full list of method callbacks.
@@ -226,11 +225,13 @@ If you are using Proguard in your project, include the following lines to your c
 
 ## Supported Devices ##
 
-As of October 2017, the following devices have been tested with Bridgefy and offer the best performance:
+As of January 2018, the following devices have been tested with Bridgefy and offer the best performance:
+* Google Pixel 2
 * Google Pixel
 * Nexus 6P
 * Nexus 5X
 * Nexus 6
+* Samsung Galaxy S8
 * Samsung Galaxy S7
 * Samsung Galaxy S6
 * Moto Z
@@ -240,6 +241,7 @@ As of October 2017, the following devices have been tested with Bridgefy and off
 * Moto E 2nd gen
 * OnePlus One
 * OnePlus 3T
+* OnePlus 5
 * Sony Xperia Z5
 * Sony Xperia Z5 Compact
 * Raspbery Pi 3 (Android Things)

@@ -13,6 +13,7 @@ import com.bridgefy.samples.tic_tac_toe.entities.Move;
 import com.bridgefy.samples.tic_tac_toe.entities.Player;
 import com.bridgefy.samples.tic_tac_toe.entities.RefuseMatch;
 import com.bridgefy.sdk.client.Bridgefy;
+import com.bridgefy.sdk.client.Message;
 import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
@@ -132,8 +133,7 @@ public class MatchActivity extends TicTacToeActivity {
 
     private void endMatch() {
         if (matchId != null && !publicMatch) {
-            Bridgefy.sendBroadcastMessage(Bridgefy.createMessage(
-                    new RefuseMatch(matchId, false).toHashMap()));
+            Bridgefy.sendBroadcastMessage(new RefuseMatch(matchId, false).toHashMap());
             MainActivity.dropMatch(matchId);
         }
         finish();
@@ -159,14 +159,12 @@ public class MatchActivity extends TicTacToeActivity {
         // preserve the Move locally and send it as a message
         onMoveReceived(move);
         MainActivity.onMoveReceived(move);
-        Bridgefy.sendBroadcastMessage(Bridgefy.createMessage(move.toHashMap()));
+        Bridgefy.sendBroadcastMessage(move.toHashMap());
 
         // implement a timeout for the current match
-        new ScheduledThreadPoolExecutor(1).schedule(new Runnable() {
-            public void run() {
-                Log.w(TAG, "Timeout for matchId: " + matchId);
-                endMatch();
-            }
+        new ScheduledThreadPoolExecutor(1).schedule(() -> {
+            Log.w(TAG, "Timeout for matchId: " + matchId);
+            endMatch();
         }, 25, TimeUnit.MINUTES);
     }
 
@@ -189,7 +187,7 @@ public class MatchActivity extends TicTacToeActivity {
         // preserve the Move locally and send it as a message
         onMoveReceived(move);
         MainActivity.onMoveReceived(move);
-        Bridgefy.sendBroadcastMessage(Bridgefy.createMessage(move.toHashMap()));
+        Bridgefy.sendBroadcastMessage(move.toHashMap());
     }
 
     @Override
@@ -206,7 +204,7 @@ public class MatchActivity extends TicTacToeActivity {
         // preserve the Move locally and send it as a message
         onMoveReceived(move);
         MainActivity.onMoveReceived(move);
-        Bridgefy.sendBroadcastMessage(Bridgefy.createMessage(move.toHashMap()));
+        Bridgefy.sendBroadcastMessage(move.toHashMap());
     }
 
     @OnClick({R.id.button_new_match})

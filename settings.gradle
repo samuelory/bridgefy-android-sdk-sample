@@ -1,4 +1,4 @@
-include ':nearby', ':broadcast-alerts', ':tic-tac-toe', ':chat', ':twitter'
+include ':nearby', ':broadcast-alerts', ':tic-tac-toe', ':chat', ':twitter', ':bridgefyfileshare'
 
 // enable this to access the bridgefy local sdk files (modify the app:build.gradle file as well)
 //include ':app', ':bridgefy-sdk-android'

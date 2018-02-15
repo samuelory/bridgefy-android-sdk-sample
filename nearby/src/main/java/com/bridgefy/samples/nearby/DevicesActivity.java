@@ -91,12 +91,7 @@ public class DevicesActivity extends AppCompatActivity {
         @Override
         public void onRegistrationFailed(int errorCode, String message) {
             Log.e(TAG, "onRegistrationFailed: failed with ERROR_CODE: " + errorCode + ", MESSAGE: " + message);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(DevicesActivity.this, "Bridgefy registration did not succeed.", Toast.LENGTH_LONG).show();
-                }
-            });
+            runOnUiThread(() -> Toast.makeText(DevicesActivity.this, "Bridgefy registration did not succeed.", Toast.LENGTH_LONG).show());
         }
     };
 
@@ -185,8 +180,6 @@ public class DevicesActivity extends AppCompatActivity {
         data.put("manufacturer ",Build.MANUFACTURER);
         data.put("model", Build.MODEL);
 
-        // since this is a broadcast message, it's not necessary to specify a receiver
-        Message message = Bridgefy.createMessage(null, data);
         device.sendMessage(data);
 
         Log.d(TAG, "Message sent!");

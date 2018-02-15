@@ -56,11 +56,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Configure the Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.peer_list);
+        RecyclerView recyclerView = findViewById(R.id.peer_list);
         recyclerView.setAdapter(peersAdapter);
 
 
@@ -153,8 +153,10 @@ public class MainActivity extends AppCompatActivity {
                 //if it's an Android Things device, reply automatically
                 HashMap<String, Object> content = new HashMap<>();
                 content.put("text", "Beep boop. I'm a bot.");
-                Message replyMessage = Bridgefy.createMessage(message.getSenderId(), content);
-                Bridgefy.sendMessage(replyMessage);
+
+                Message.Builder builder=new Message.Builder();
+                builder.setContent(content).setReceiverId(message.getSenderId());
+                Bridgefy.sendMessage(builder.build());
 
             }
         }
@@ -294,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
 
             PeerViewHolder(View view) {
                 super(view);
-                mContentView = (TextView) view.findViewById(R.id.peerName);
+                mContentView = view.findViewById(R.id.peerName);
                 view.setOnClickListener(this);
             }
 

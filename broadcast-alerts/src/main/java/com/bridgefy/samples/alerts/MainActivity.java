@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
@@ -184,11 +184,10 @@ public class MainActivity extends AppCompatActivity {
         data.put(number, sentAlertCounter);
         data.put(date_sent, Double.parseDouble("" + System.currentTimeMillis()));
         data.put(device_name, Build.MANUFACTURER + " " + Build.MODEL);
-        Message message = Bridgefy.createMessage(data);
 
 
         //Broadcast messages are sent to anyone that can receive it
-        Bridgefy.sendBroadcastMessage(message);
+        Bridgefy.sendBroadcastMessage(data);
         sentAlerts.setText(String.valueOf(sentAlertCounter));
     }
 

@@ -32,7 +32,7 @@ class TweetManager extends MessageListener {
     // This list only holds posted tweets. Unsuccessful tweets are simply broadcasted to the network
     // as offline tweets in hopes for peers to post them online and return the tweet status with the
     // an enabled posted flag
-// TODO add observer to update the TimelineActivity UI
+    // TODO add observer to update the TimelineActivity UI
     private ArrayList<Tweet> mPostedTweets = new ArrayList<>();
 
 
@@ -83,8 +83,7 @@ class TweetManager extends MessageListener {
             // broadcast the tweet only if it was ours or if post was successful
             if (tweet.getSender().equals(username) || tweet.isPosted()) {
                 Log.v(TAG, tweet.toString());
-                Bridgefy.sendBroadcastMessage(
-                        Bridgefy.createMessage(tweet.toHashMap()));
+                Bridgefy.sendBroadcastMessage(tweet.toHashMap());
 
                 if (tweet.isPosted())
                     tweetListener.onTweetPosted(tweet);
@@ -117,6 +116,8 @@ class TweetManager extends MessageListener {
         // pass the tweet on to the TweetListener
         tweetListener.onTweetReceived(tweet);
     }
+
+
 
     public boolean isGateway() {
         return gateway;
