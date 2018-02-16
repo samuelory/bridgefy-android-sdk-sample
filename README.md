@@ -73,7 +73,7 @@ asynchronously to the **RegistrationListener** object.
 
 ```java
 //Always use the Application context to avoid leaks
-Bridgefy.initialize(getApplicationContext(), XXXXXXXX-XXXX-XXXX-XXXX-XXXX, new RegistrationListener() {
+Bridgefy.initialize(getApplicationContext(), new RegistrationListener() {
     @Override
     public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
         // Bridgefy is ready to start
@@ -86,7 +86,7 @@ Bridgefy.initialize(getApplicationContext(), XXXXXXXX-XXXX-XXXX-XXXX-XXXX, new R
         ...    
 });
 ```
-Alternatively, you can provide a **null** argument instead of the **API_KEY** if you included one in your **AndroidManifest.xml** file.
+Don't forget to include your project's API_KEY in your **AndroidManifest.xml** file.
 
 ```xml
 <meta-data
@@ -223,9 +223,13 @@ If you are using Proguard in your project, include the following lines to your c
 -dontwarn org.msgpack.core.**
 ```
 
+## Full documentation ##
+
+The full javadoc can be consulted [here](https://www.bridgefy.me/docs/javadoc/).
+
 ## Supported Devices ##
 
-As of January 2018, the following devices have been tested with Bridgefy and offer the best performance:
+As of February 2018, the following devices have been tested with Bridgefy and offer the best performance:
 * Google Pixel 2
 * Google Pixel
 * Nexus 6P
