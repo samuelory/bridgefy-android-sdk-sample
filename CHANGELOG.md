@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.6] - 2018-02-28
+### Changed
+- Devices running Android Things are properly started now.
+
+
 ## [1.1.5] - 2018-01-22
 ### Changed
 - Solved a bug that caused errors when receiving binary data from iOS devices
