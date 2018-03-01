@@ -73,7 +73,7 @@ asynchronously to the **RegistrationListener** object.
 
 ```java
 //Always use the Application context to avoid leaks
-Bridgefy.initialize(getApplicationContext(), new RegistrationListener() {
+Bridgefy.initialize(getApplicationContext(), YOUR_API_KEY, new RegistrationListener() {
     @Override
     public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
         // Bridgefy is ready to start
@@ -86,13 +86,14 @@ Bridgefy.initialize(getApplicationContext(), new RegistrationListener() {
         ...    
 });
 ```
-Don't forget to include your project's API_KEY in your **AndroidManifest.xml** file.
+Alternatively, you can remove the **API_KEY** parameter if you included one in your **AndroidManifest.xml** file.
 
 ```xml
 <meta-data
         android:name="com.bridgefy.sdk.API_KEY"
         android:value="..." />
 ```
+
 
 This call requires an active Internet connection on the device in order to check the status of your Bridgefy license. As long as your license is valid, an Internet connection won't be needed again until the time comes to renew or update it.
 
@@ -138,11 +139,11 @@ At this point, the **StateListener** callback will let you know every time a suc
 
 ```java
 @Override
-public void onDeviceConnected(Device device) {
+public void onDeviceConnected(Device device, Session session) {
     // Do something with the found device
     device.sendMessage(...);
 }
-
+ 
 @Override
 public void onDeviceLost(Device device) {
     // Let your implementation know that a device is no longer available
@@ -160,10 +161,10 @@ In order to send Messages you will need to build a **Message** object which is b
 // Build a HashMap object
 HashMap<String, Object> data = new HashMap<>();
 data.put("foo","Hello world");
-
+ 
 // Create a message with the HashMap and the recipient's id
 Message message =new Message.Builder().setContent(data).setReceiverId(device.getUserId()).build();
-
+ 
 // Send the message to the specified recipient
 Bridgefy.sendMessage(message);
 ```
@@ -229,7 +230,7 @@ The full javadoc can be consulted [here](https://www.bridgefy.me/docs/javadoc/).
 
 ## Supported Devices ##
 
-As of February 2018, the following devices have been tested with Bridgefy and offer the best performance:
+As of March 2018, the following devices have been tested with Bridgefy and offer the best performance:
 * Google Pixel 2
 * Google Pixel
 * Nexus 6P
