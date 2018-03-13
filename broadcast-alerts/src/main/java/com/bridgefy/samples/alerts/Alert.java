@@ -4,23 +4,53 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Alert implements Parcelable {
-       private  String id;
-       private int count;
-       private String name;
-       private long date;
 
-        public Alert(String id, int count, String name, long date) {
-            this.id = id;
-            this.count = count;
-            this.name = name;
-            this.date = date;
+    private String id;
+    private int count;
+    private String name;
+    private long date;
+
+
+    public Alert(String id, int count, String name, long date) {
+        this.id = id;
+        this.count = count;
+        this.name = name;
+        this.date = date;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeInt(this.count);
+        dest.writeString(this.name);
+        dest.writeLong(this.date);
+    }
+
+    protected Alert(Parcel in) {
+        this.id = in.readString();
+        this.count = in.readInt();
+        this.name = in.readString();
+        this.date = in.readLong();
+    }
+
+
+    public static final Parcelable.Creator<Alert> CREATOR = new Parcelable.Creator<Alert>() {
+        @Override
+        public Alert createFromParcel(Parcel source) {
+            return new Alert(source);
         }
 
         @Override
-        public String toString() {
-            return id + " "+ count;
+        public Alert[] newArray(int size) {
+            return new Alert[size];
         }
-
+    };
 
     public String getId() {
         return id;
@@ -54,37 +84,9 @@ public class Alert implements Parcelable {
         this.date = date;
     }
 
-
     @Override
-    public int describeContents() {
-        return 0;
+    public String toString() {
+        return id + " " + count;
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.id);
-        dest.writeInt(this.count);
-        dest.writeString(this.name);
-        dest.writeLong(this.date);
-    }
-
-    protected Alert(Parcel in) {
-        this.id = in.readString();
-        this.count = in.readInt();
-        this.name = in.readString();
-        this.date = in.readLong();
-    }
-
-    public static final Parcelable.Creator<Alert> CREATOR = new Parcelable.Creator<Alert>() {
-        @Override
-        public Alert createFromParcel(Parcel source) {
-            return new Alert(source);
-        }
-
-        @Override
-        public Alert[] newArray(int size) {
-            return new Alert[size];
-        }
-    };
 }
 

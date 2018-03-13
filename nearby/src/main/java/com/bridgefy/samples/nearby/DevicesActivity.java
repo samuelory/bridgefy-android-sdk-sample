@@ -40,8 +40,8 @@ public class DevicesActivity extends AppCompatActivity {
     private final String TAG = "DevicesActivity";
 
     @BindView(R.id.devices_recycler_view)
-    RecyclerView    devicesRecyclerView;
-    DevicesAdapter  devicesAdapter;
+    RecyclerView devicesRecyclerView;
+    DevicesAdapter devicesAdapter;
 
 
     @Override
@@ -61,23 +61,22 @@ public class DevicesActivity extends AppCompatActivity {
             initializeBridgefy();
         } else {
             ActivityCompat.requestPermissions(this,
-                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 0);
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         Bridgefy.stop();
     }
 
 
     /**
-     *      BRIDGEFY REGISTRATION LISTENERS
+     *      BRIDGEFY INITIALIZATION
      */
 
-    RegistrationListener registrationListener=new RegistrationListener() {
+    RegistrationListener registrationListener = new RegistrationListener() {
         @Override
         public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
             Log.i(TAG, "onRegistrationSuccessful: current userId is: " + bridgefyClient.getUserUuid());
@@ -85,7 +84,7 @@ public class DevicesActivity extends AppCompatActivity {
             Log.i(TAG, "Device Evaluation " + bridgefyClient.getDeviceProfile().getDeviceEvaluation());
 
             // Start the Bridgefy SDK
-            Bridgefy.start(messageListener,stateListener);
+            Bridgefy.start(messageListener, stateListener);
         }
 
         @Override
@@ -100,17 +99,44 @@ public class DevicesActivity extends AppCompatActivity {
         }
     };
 
+    private void initializeBridgefy() {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        if (isThingsDevice(this)) {
+            // enabling bluetooth automatically
+            bluetoothAdapter.enable();
+        }
 
+        //Always use steady context objects to avoid leaks
+        Bridgefy.initialize(getApplicationContext(), registrationListener);
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            initializeBridgefy();
+        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            Toast.makeText(this, "Location permissions needed to start devices discovery.", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
 
 
     /**
-     *      BRIDGEFY WORKFLOW LISTENERS
+     *       BRIDGEFY WORKFLOW LISTENERS
      */
+    private void sendMessage(Device device) {
+        // construir objeto de mensaje
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("manufacturer ", Build.MANUFACTURER);
+        data.put("model", Build.MODEL);
+        device.sendMessage(data);
 
+        Log.d(TAG, "Message sent!");
+    }
 
-        StateListener stateListener =new StateListener() {
+    StateListener stateListener = new StateListener() {
         @Override
         public void onDeviceConnected(Device device, Session session) {
             Log.i(TAG, "Device found: " + device.getUserId());
@@ -132,7 +158,7 @@ public class DevicesActivity extends AppCompatActivity {
         @Override
         public void onStartError(String s, int i) {
             super.onStartError(s, i);
-            Log.e(TAG, "onStartError: "+s +" "+ i );
+            Log.e(TAG, "onStartError: " + s + " " + i);
         }
 
         @Override
@@ -142,11 +168,7 @@ public class DevicesActivity extends AppCompatActivity {
         }
     };
 
-
-
-
-    MessageListener messageListener=new MessageListener() {
-
+    MessageListener messageListener = new MessageListener() {
         @Override
         public void onMessageReceived(Message message) {
             String s = message.getContent().get("manufacturer ") + " " + message.getContent().get("model");
@@ -159,7 +181,6 @@ public class DevicesActivity extends AppCompatActivity {
             Log.e(TAG, "Message failed", e);
         }
 
-
         @Override
         public void onMessageSent(Message message) {
             Log.d(TAG, "Message sent to: " + message.getReceiverId());
@@ -170,60 +191,16 @@ public class DevicesActivity extends AppCompatActivity {
             Log.e(TAG, e.getMessage());
 
         }
-
     };
 
 
-
-
     /**
-     *      OTHER STUFF
+     *      ADAPTER
      */
-    private void sendMessage(Device device) {
-        // construir objeto de mensaje
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("manufacturer ",Build.MANUFACTURER);
-        data.put("model", Build.MODEL);
-
-        // since this is a broadcast message, it's not necessary to specify a receiver
-        Message message = Bridgefy.createMessage(null, data);
-        device.sendMessage(data);
-
-        Log.d(TAG, "Message sent!");
-    }
-
-
 
     public boolean isThingsDevice(Context context) {
         final PackageManager pm = context.getPackageManager();
         return pm.hasSystemFeature("android.hardware.type.embedded");
-    }
-
-    private void initializeBridgefy() {
-
-
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-
-        if (isThingsDevice(this))
-        {
-            //enabling bluetooth automatically
-            bluetoothAdapter.enable();
-        }
-        //Always use steady context objects to avoid leaks
-        Bridgefy.initialize(getApplicationContext(), registrationListener);
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            initializeBridgefy();
-        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            Toast.makeText(this, "Location permissions needed to start devices discovery.", Toast.LENGTH_SHORT).show();
-            finish();
-        }
     }
 
     public class DevicesAdapter extends RecyclerView.Adapter<DeviceViewHolder> {

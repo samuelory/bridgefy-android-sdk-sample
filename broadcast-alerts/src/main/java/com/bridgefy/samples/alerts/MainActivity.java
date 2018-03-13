@@ -35,6 +35,8 @@ import butterknife.Unbinder;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String TAG = "BRIDGEFY_SAMPLE";
+
     @BindView(R.id.received_alerts)
     TextView receivedAlerts;
     @BindView(R.id.device_text)
@@ -48,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private int sentAlertCounter = 0;
     private int receivedAlertCounter = 0;
     Unbinder unbinder;
-    private String TAG = "BRIDGEFY_SAMPLE";
-    private ArrayList<Alert> alertsData=new ArrayList<>();
+    private ArrayList<Alert> alertsData = new ArrayList<>();
+
     String fragmentTag = "alerts_fragment";
     String number = "number";
     String date_sent = "date_sent";
@@ -61,40 +63,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
-
         deviceText.setText(Build.MANUFACTURER + " " + Build.MODEL);
-
-
 
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-
-        if (isThingsDevice(this))
-        {
-            //enabling bluetooth automatically
+        if (isThingsDevice(this)) {
+            // enabling bluetooth automatically
             bluetoothAdapter.enable();
         }
 
         Bridgefy.initialize(getApplicationContext(), "68898033-3dce-4c80-843e-e10982b942ac", new RegistrationListener() {
             @Override
             public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
-                super.onRegistrationSuccessful(bridgefyClient);
-
-                //Important data can be fetched from the BridgefyClient object
+                // Important data can be fetched from the BridgefyClient object
                 deviceId.setText(bridgefyClient.getUserUuid());
 
-                //Once the registration process has been successful, we can start operations
+                // Once the registration process has been successful, we can start operations
                 Bridgefy.start(messageListener, stateListener);
             }
 
             @Override
-            public void onRegistrationFailed(int i, String s) {
-                super.onRegistrationFailed(i, s);
+            public void onRegistrationFailed(int i, String e) {
+                Log.e(TAG, e);
             }
         });
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
@@ -107,39 +101,28 @@ public class MainActivity extends AppCompatActivity {
     StateListener stateListener = new StateListener() {
         @Override
         public void onStarted() {
-            super.onStarted();
             Log.i(TAG, "onStarted: Bridgefy started");
 
-
-            if (isThingsDevice(getApplicationContext()))
-            {
+            if (isThingsDevice(getApplicationContext())) {
                 ///for Android Things devices, we automatically send an alert as soon as possible
                 //since there is no UI to do it
                 //A message will be dispatched every 10 seconds
-
-                final Handler handler=new Handler();
+                final Handler handler = new Handler();
 
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         prepareMessage();
-                        handler.postDelayed(this,10000);
+                        handler.postDelayed(this, 10000);
                     }
                 });
-
-
             }
         }
 
         @Override
         public void onStartError(String s, int i) {
-            super.onStartError(s, i);
-
-
             switch (i) {
-
                 case (StateListener.INSUFFICIENT_PERMISSIONS):
-
                     //starting operations will fail if you haven't granted the necessary permissions
                     //request them and try again after they have been granted
                     ActivityCompat.requestPermissions(MainActivity.this,
@@ -148,38 +131,23 @@ public class MainActivity extends AppCompatActivity {
                 case (StateListener.LOCATION_SERVICES_DISABLED):
                     //location in the device has been disabled
                     break;
-
-
             }
         }
-
-        @Override
-        public void onStopped() {
-            super.onStopped();
-        }
     };
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
             //retry again after permissions have been granted
             Bridgefy.start(messageListener, stateListener);
         }
     }
 
-
-
-    void prepareMessage()
-    {
-
+    void prepareMessage() {
         sentAlertCounter++;
 
         //assemble the data that we are about to send
-
-
         HashMap<String, Object> data = new HashMap<>();
         data.put(number, sentAlertCounter);
         data.put(date_sent, Double.parseDouble("" + System.currentTimeMillis()));
@@ -194,9 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab)
     public void onViewClicked() {
-
-
-      prepareMessage();
+        prepareMessage();
     }
 
     @Override
@@ -204,30 +170,24 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         unbinder.unbind();
 
-
-        //always stop Bridgefy when it's no longer necessary
+        // always stop Bridgefy when it's no longer necessary
         Bridgefy.stop();
     }
 
     MessageListener messageListener = new MessageListener() {
         @Override
         public void onBroadcastMessageReceived(Message message) {
-            super.onBroadcastMessageReceived(message);
-
             receivedAlertCounter++;
             receivedAlerts.setText(String.valueOf(receivedAlertCounter));
 
-
-
-            HashMap<String,Object> content = message.getContent();
+            HashMap<String, Object> content = message.getContent();
 
             Alert alert = new Alert(message.getSenderId(), (Integer) content.get(number), (String) content.get(device_name), ((Double) content.get(date_sent)).longValue());
 
             alertsData.add(alert);
 
-            AlertFragment alertFragment= (AlertFragment) getSupportFragmentManager().findFragmentByTag(fragmentTag);
-            if (alertFragment!=null)
-            {
+            AlertFragment alertFragment = (AlertFragment) getSupportFragmentManager().findFragmentByTag(fragmentTag);
+            if (alertFragment != null) {
                 alertFragment.updateList(alertsData);
             }
         }
@@ -248,12 +208,9 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         if (id == R.id.action_alerts) {
-
             AlertFragment alertFragment = AlertFragment.newInstance(alertsData);
-            getSupportFragmentManager().beginTransaction().add(R.id.content_main,alertFragment,"alerts_fragment").addToBackStack(null).commit();
-
+            getSupportFragmentManager().beginTransaction().add(R.id.content_main, alertFragment, "alerts_fragment").addToBackStack(null).commit();
 
             return true;
         }
@@ -263,12 +220,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        if (getSupportFragmentManager().findFragmentByTag(fragmentTag)!=null)
-        {
+        if (getSupportFragmentManager().findFragmentByTag(fragmentTag) != null) {
             getSupportFragmentManager().popBackStackImmediate();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }

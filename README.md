@@ -46,7 +46,7 @@ android {
 
             maven {
              url "http://maven.bridgefy.com/artifactory/libs-release-local"
-             artifactUrls=["http://jcenter.bintray.com/"]
+             artifactUrls = ["http://jcenter.bintray.com/"]
               }
  ....
         }
@@ -79,8 +79,8 @@ Alternatively, you can provide a null argument instead of the **apiKey** if you 
 
 ```xml
 <meta-data
-        android:name="com.bridgefy.sdk.API_KEY"
-        android:value="..." />
+        android:name  = "com.bridgefy.sdk.API_KEY"
+        android:value = "..." />
 ```
 
 This call requires an active Internet connection on the device in order to check the status of your Bridgefy license. As long as your license is valid, an Internet connection won't be needed again until the time comes to renew or update it.

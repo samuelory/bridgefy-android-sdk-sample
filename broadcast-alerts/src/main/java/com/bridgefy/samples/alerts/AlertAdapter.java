@@ -37,21 +37,18 @@ public class AlertAdapter extends RecyclerView.Adapter<AlertAdapter.ViewHolder> 
         holder.mItem = mValues.get(position);
         String id = holder.mItem.getId();
 
-        holder.mIdView.setText(holder.mItem.getName() + " ("+id.substring(25)+")");
+        holder.mIdView.setText(holder.mItem.getName() + " (" + id.substring(25) + ")");
         holder.mContentView.setText(String.valueOf(holder.mItem.getCount()));
 
         long dateLong = holder.mItem.getDate();
         Date date = new Date(dateLong);
-        SimpleDateFormat format=new SimpleDateFormat("hh:mm");
-        holder.mDateView.setText(format.format(date));
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm");
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
+        holder.mDateView.setText(format.format(date));
+        holder.mView.setOnClickListener(view -> {
+            // nothing happens here
         });
     }
-
 
 
     @Override
@@ -60,7 +57,7 @@ public class AlertAdapter extends RecyclerView.Adapter<AlertAdapter.ViewHolder> 
     }
 
     public void updateData(ArrayList<Alert> alertsData) {
-        mValues=alertsData;
+        mValues = alertsData;
         notifyDataSetChanged();
     }
 
@@ -74,9 +71,9 @@ public class AlertAdapter extends RecyclerView.Adapter<AlertAdapter.ViewHolder> 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.txt_user);
-            mContentView = (TextView) view.findViewById(R.id.txt_count);
-            mDateView = (TextView) view.findViewById(R.id.txt_date);
+            mIdView = view.findViewById(R.id.txt_user);
+            mContentView = view.findViewById(R.id.txt_count);
+            mDateView = view.findViewById(R.id.txt_date);
         }
 
         @Override
@@ -84,7 +81,4 @@ public class AlertAdapter extends RecyclerView.Adapter<AlertAdapter.ViewHolder> 
             return super.toString() + " '" + mContentView.getText() + "'";
         }
     }
-
-
-
 }

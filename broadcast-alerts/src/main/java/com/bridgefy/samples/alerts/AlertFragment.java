@@ -20,7 +20,7 @@ public class AlertFragment extends Fragment {
 
 
     private static final String ARG_ALERTS = "alerts";
-    private ArrayList<Alert> alerts=new ArrayList<>();
+    private ArrayList<Alert> alerts = new ArrayList<>();
     private AlertAdapter alertsAdapter;
     RecyclerView recyclerView;
 
@@ -35,7 +35,7 @@ public class AlertFragment extends Fragment {
     public static AlertFragment newInstance(ArrayList<Alert> alertData) {
         AlertFragment fragment = new AlertFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_ALERTS,alertData);
+        args.putParcelableArrayList(ARG_ALERTS, alertData);
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,9 +46,9 @@ public class AlertFragment extends Fragment {
 
         if (getArguments() != null) {
             ArrayList<Alert> alertCount = getArguments().getParcelableArrayList(ARG_ALERTS);
-
             alerts.addAll(alertCount);
         }
+
         alertsAdapter = new AlertAdapter(alerts);
     }
 
@@ -59,19 +59,15 @@ public class AlertFragment extends Fragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-             recyclerView= (RecyclerView) view;
-
+            recyclerView = (RecyclerView) view;
             recyclerView.setAdapter(alertsAdapter);
         }
+
         return view;
     }
 
     public void updateList(ArrayList<Alert> alertsData) {
         alertsAdapter.updateData(alertsData);
-        recyclerView.scrollToPosition(alertsData.size()-1);
-
-
-
+        recyclerView.scrollToPosition(alertsData.size() - 1);
     }
 }

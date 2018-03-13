@@ -54,8 +54,8 @@ public class IntroActivity extends AppCompatActivity {
                 Build.MODEL.split(" ")[0] : Build.MODEL.replaceAll("\\s","");
         txtUsername.setText(username);;
 
-//        // Configure the Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Configure the Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
@@ -104,9 +104,8 @@ public class IntroActivity extends AppCompatActivity {
                 username = usernameInput;
 
             // start the TimelineActivity
-            startActivity(
-                    new Intent(getBaseContext(), TimelineActivity.class)
-                            .putExtra(INTENT_USERNAME, username));
+            startActivity(new Intent(getBaseContext(), TimelineActivity.class)
+                              .putExtra(INTENT_USERNAME, username));
         }
 
         @Override
