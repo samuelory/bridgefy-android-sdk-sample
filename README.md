@@ -44,7 +44,7 @@ android {
          ...
          maven {
              url "http://maven.bridgefy.com/artifactory/libs-release-local"
-             artifactUrls=["http://jcenter.bintray.com/"]
+             artifactUrls = ["http://jcenter.bintray.com/"]
               }
         ...
         }
@@ -90,8 +90,8 @@ Alternatively, you can remove the **API_KEY** parameter if you included one in y
 
 ```xml
 <meta-data
-        android:name="com.bridgefy.sdk.API_KEY"
-        android:value="..." />
+        android:name  = "com.bridgefy.sdk.API_KEY"
+        android:value = "..." />
 ```
 
 

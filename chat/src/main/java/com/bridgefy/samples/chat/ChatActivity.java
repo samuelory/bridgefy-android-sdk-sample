@@ -110,7 +110,7 @@ public class ChatActivity extends AppCompatActivity {
             HashMap<String, Object> content = new HashMap<>();
             content.put("text", messageString);
 
-            // send message text to device
+            // send text message to device(s)
             if (conversationId.equals(BROADCAST_CHAT)) {
                 // we put extra information in broadcast packets since they won't be bound to a session
                 content.put("device_name", Build.MANUFACTURER + " " + Build.MODEL);

@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     static final String BROADCAST_CHAT    = "Broadcast";
 
     PeersRecyclerViewAdapter peersAdapter =
-            new PeersRecyclerViewAdapter(new ArrayList<Peer>());
+            new PeersRecyclerViewAdapter(new ArrayList<>());
 
 
     @Override
@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.peer_list);
         recyclerView.setAdapter(peersAdapter);
-
 
 
         if (isThingsDevice(this)) {
@@ -125,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         Bridgefy.start(messageListener, stateListener);
     }
 
+    // TODO change for BridgefyUtils method
     public boolean isThingsDevice(Context context) {
         final PackageManager pm = context.getPackageManager();
         return pm.hasSystemFeature("android.hardware.type.embedded");
@@ -140,24 +140,24 @@ public class MainActivity extends AppCompatActivity {
                 peer.setNearby(true);
                 peer.setDeviceType(extractType(message));
                 peersAdapter.addPeer(peer);
+                Log.d(TAG, "Peer introduced itself: " + peer.getDeviceName());
 
             // any other direct message should be treated as such
             } else {
                 String incomingMessage = (String) message.getContent().get("text");
+                Log.d(TAG, "Incoming private message: " + incomingMessage);
                 LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
                         new Intent(message.getSenderId())
                                 .putExtra(INTENT_EXTRA_MSG, incomingMessage));
             }
 
+            // if it's an Android Things device, reply automatically
             if (isThingsDevice(MainActivity.this)) {
-                //if it's an Android Things device, reply automatically
+                Log.d(TAG, "I'm a bot. Responding message automatically.");
                 HashMap<String, Object> content = new HashMap<>();
                 content.put("text", "Beep boop. I'm a bot.");
-
-                Message.Builder builder=new Message.Builder();
-                builder.setContent(content).setReceiverId(message.getSenderId());
-                Bridgefy.sendMessage(builder.build());
-
+                Message replyMessage = Bridgefy.createMessage(message.getSenderId(), content);
+                Bridgefy.sendMessage(replyMessage);
             }
         }
 
@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
             String deviceName  = (String) message.getContent().get("device_name");
             Peer.DeviceType deviceType = extractType(message);
 
+            Log.d(TAG, "Incoming broadcast message: " + incomingMsg);
             LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
                     new Intent(BROADCAST_CHAT)
                             .putExtra(INTENT_EXTRA_NAME, deviceName)
@@ -191,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
     StateListener stateListener = new StateListener() {
         @Override
         public void onDeviceConnected(final Device device, Session session) {
+            Log.i(TAG, "onDeviceConnected: " + device.getUserId());
             // send our information to the Device
             HashMap<String, Object> map = new HashMap<>();
             map.put("device_name", Build.MANUFACTURER + " " + Build.MODEL);
@@ -199,9 +201,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onDeviceLost(Device peer) {
-            Log.w(TAG, "onDeviceLost: " + peer.getUserId());
-            peersAdapter.removePeer(peer);
+        public void onDeviceLost(Device device) {
+            Log.w(TAG, "onDeviceLost: " + device.getUserId());
+            peersAdapter.removePeer(device);
         }
 
         @Override
@@ -220,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
             // Start Bridgefy
             startBridgefy();
 
@@ -290,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         class PeerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
             final TextView mContentView;
             Peer peer;
 
