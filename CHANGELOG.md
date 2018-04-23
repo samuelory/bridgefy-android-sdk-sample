@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1.8] - 2018-02-28
 ### Changed
-- Devices running Android Things are properly started now.
+- Added a new profile for messages.
 
 
 ## [1.1.6] - 2018-02-28
