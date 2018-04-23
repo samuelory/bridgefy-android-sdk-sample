@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.9] - 2018-04-22
+### Changed
+- Added hops field to Message.
+- Fixed a threading issue.
+
+
+## [1.1.6] - 2018-02-28
+### Changed
+- Devices running Android Things are properly started now.
+
+
 ## [1.1.6] - 2018-02-28
 ### Changed
 - Devices running Android Things are properly started now.
