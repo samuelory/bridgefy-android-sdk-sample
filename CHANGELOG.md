@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a threading issue.
 
 
-## [1.1.6] - 2018-02-28
+## [1.1.8] - 2018-02-28
 ### Changed
 - Devices running Android Things are properly started now.
 
