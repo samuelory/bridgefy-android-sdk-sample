@@ -81,14 +81,12 @@ public class TimelineActivity extends AppCompatActivity implements TweetManager.
         Bridgefy.setMessageListener(tweetManager = new TweetManager(username, this));
 
         // register the connected receiver
-//        LocalBroadcastManager.getInstance(this).registerReceiver(wifiReceiver, wifiReceiver.getIntentFilter());
-        getApplicationContext().registerReceiver(wifiReceiver,
+        registerReceiver(wifiReceiver,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
     protected void onDestroy() {
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(wifiReceiver);
         unregisterReceiver(wifiReceiver);
         if (isFinishing()) {
             try {

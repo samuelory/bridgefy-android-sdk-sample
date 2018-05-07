@@ -16,6 +16,7 @@ buildscript {
 
 ext {
     enableDexGuardPlugin = false
+
     enableArtifactory = false
 }
 
