@@ -63,12 +63,12 @@ class TweetManager extends MessageListener {
             if (isGateway()) {
                 try {
                     // post the status online
-                    twitter.updateStatus("#" + tweet.getSender() + " " + tweet.getContent());
+                    twitter4j.Status status = twitter.updateStatus("#" + tweet.getSender() + " " + tweet.getContent());
                     tweet.setPosted(true);
 
                     // add the tweet to our control list
                     mPostedTweets.add(tweet);
-                    Log.d(TAG, "Tweet posted successfuly: " + tweet.getContent());
+                    Log.d(TAG, "Tweet posted successfuly, status: http://twitter.com/statuses/" + status.getId());
                 } catch (TwitterException te) {
                     Log.w(TAG, "Tweet wasn't posted: " + te.getMessage());
                 }
