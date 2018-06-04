@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.10] - 2018-06-04
+### Changed
+- Fixed an connectivity issue involving Android Things and the Raspberry Pi
+
+
 ## [1.1.9] - 2018-04-22
 ### Changed
 - Added hops field to Message.
