@@ -46,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
     static final String INTENT_EXTRA_MSG  = "message";
     static final String BROADCAST_CHAT    = "Broadcast";
 
+    static final String PAYLOAD_DEVICE_TYPE  = "device_type";
+    static final String PAYLOAD_DEVICE_NAME  = "device_name";
+    static final String PAYLOAD_TEXT         = "text";
+
     PeersRecyclerViewAdapter peersAdapter =
             new PeersRecyclerViewAdapter(new ArrayList<>());
 
@@ -134,9 +138,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onMessageReceived(Message message) {
             // direct messages carrying a Device name represent device handshakes
-            if (message.getContent().get("device_name") != null) {
+            if (message.getContent().get(PAYLOAD_DEVICE_NAME) != null) {
                 Peer peer = new Peer(message.getSenderId(),
-                        (String) message.getContent().get("device_name"));
+                        (String) message.getContent().get(PAYLOAD_DEVICE_NAME));
                 peer.setNearby(true);
                 peer.setDeviceType(extractType(message));
                 peersAdapter.addPeer(peer);
@@ -165,8 +169,8 @@ public class MainActivity extends AppCompatActivity {
         public void onBroadcastMessageReceived(Message message) {
             // we should not expect to have connected previously to the device that originated
             // the incoming broadcast message, so device information is included in this packet
-            String incomingMsg = (String) message.getContent().get("text");
-            String deviceName  = (String) message.getContent().get("device_name");
+            String incomingMsg = (String) message.getContent().get(PAYLOAD_TEXT);
+            String deviceName  = (String) message.getContent().get(PAYLOAD_DEVICE_NAME);
             Peer.DeviceType deviceType = extractType(message);
 
             Log.d(TAG, "Incoming broadcast message: " + incomingMsg);
@@ -180,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Peer.DeviceType extractType(Message message) {
         int eventOrdinal;
-        Object eventObj = message.getContent().get("device_type");
+        Object eventObj = message.getContent().get(PAYLOAD_DEVICE_TYPE);
         if (eventObj instanceof Double) {
             eventOrdinal = ((Double) eventObj).intValue();
         } else {
@@ -195,8 +199,8 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "onDeviceConnected: " + device.getUserId());
             // send our information to the Device
             HashMap<String, Object> map = new HashMap<>();
-            map.put("device_name", Build.MANUFACTURER + " " + Build.MODEL);
-            map.put("device_type", Peer.DeviceType.ANDROID.ordinal());
+            map.put(PAYLOAD_DEVICE_NAME, Build.MANUFACTURER + " " + Build.MODEL);
+            map.put(PAYLOAD_DEVICE_TYPE, Peer.DeviceType.ANDROID.ordinal());
             device.sendMessage(map);
         }
 
