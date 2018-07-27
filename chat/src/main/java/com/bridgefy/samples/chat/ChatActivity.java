@@ -34,6 +34,9 @@ import butterknife.OnClick;
 import static com.bridgefy.samples.chat.MainActivity.BROADCAST_CHAT;
 import static com.bridgefy.samples.chat.MainActivity.INTENT_EXTRA_NAME;
 import static com.bridgefy.samples.chat.MainActivity.INTENT_EXTRA_UUID;
+import static com.bridgefy.samples.chat.MainActivity.PAYLOAD_DEVICE_NAME;
+import static com.bridgefy.samples.chat.MainActivity.PAYLOAD_DEVICE_TYPE;
+import static com.bridgefy.samples.chat.MainActivity.PAYLOAD_TEXT;
 
 
 public class ChatActivity extends AppCompatActivity {
@@ -108,13 +111,13 @@ public class ChatActivity extends AppCompatActivity {
 
             // create a HashMap object to send
             HashMap<String, Object> content = new HashMap<>();
-            content.put("text", messageString);
+            content.put(PAYLOAD_TEXT, messageString);
 
             // send text message to device(s)
             if (conversationId.equals(BROADCAST_CHAT)) {
                 // we put extra information in broadcast packets since they won't be bound to a session
-                content.put("device_name", Build.MANUFACTURER + " " + Build.MODEL);
-                content.put("device_type", Peer.DeviceType.ANDROID.ordinal());
+                content.put(PAYLOAD_DEVICE_NAME, Build.MANUFACTURER + " " + Build.MODEL);
+                content.put(PAYLOAD_DEVICE_TYPE, Peer.DeviceType.ANDROID.ordinal());
 
                 com.bridgefy.sdk.client.Message.Builder builder=new com.bridgefy.sdk.client.Message.Builder();
                 builder.setContent(content);
