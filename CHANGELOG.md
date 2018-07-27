@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.11] - 2018-07-09
+### Changed
+- Added a new profile BFConfigProfileShortReach
+- onMessageSent(Message) has been deprecated in favor of onMessageSent(String)
+
+
 ## [1.1.10] - 2018-06-04
 ### Changed
 - Fixed an connectivity issue involving Android Things and the Raspberry Pi
@@ -15,6 +21,11 @@ All notable changes to this project will be documented in this file.
 ## [1.1.8] - 2018-02-28
 ### Changed
 - Added a new profile for messages.
+
+
+## [1.1.7] - 2018-03-05
+### Changed
+- Solved a bug that would crash devices with Bluetooth off under certain circumstances
 
 
 ## [1.1.6] - 2018-02-28
