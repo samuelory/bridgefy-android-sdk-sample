@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.13] - 2018-10-12
+### Changed
+- Fixed a crash that involved resetting Bluetooth
+- Fixed a bug with the connection decision algorithm
+### Added
+- A new callback on StateListener that warns when a device has been permanently blacklisted from connections
+
+
+## [1.1.12] - 2018-09-17
+### Changed
+- Fixed a crash that involved stopping Bridgefy while connections were active
+
+
 ## [1.1.11] - 2018-07-09
 ### Changed
 - Added a new profile BFConfigProfileShortReach
