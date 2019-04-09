@@ -109,6 +109,15 @@ The following error codes may be returned if something went wrong:
 
 A unique **userId** string is also generated locally  for your convenience in order to identify the local device. This field is method accesible on the **BridgefyClient** object returned on the successful callback.
 
+## Initialize Bridgefy without Internet ##
+![alt Bridgefy Dashboard](img/dashboard.png "Dashboard")
+
+Add the certificate file that was generated along with your Api Key in the  **assets** folder of your app. The file name must match the applicationId specified in your app's gradle file.
+If there is no internet connection available, the SDK will use this certificate to validate your licence.
+
+![alt Android Studio](img/android.jpg "Android Studio")
+
+**This certificate has a deadline of 4 weeks after you create an API Key from the Bridgefy Dashboard. Once the certificate expires, the Bridgefy SDK will require Internet connectivity on behalf of the device running the SDK to validate the subscription and continue using the Bridgefy technology. This model will be valid for all developers that download the Bridgefy SDK during April 2019. Terms and conditions, as well as the above mentioned rule, may change starting May 2019.**
 
 ## Starting Operations ##
 Once the Bridgefy SDK has been correctly registered the **onRegistrationSuccessful** method
