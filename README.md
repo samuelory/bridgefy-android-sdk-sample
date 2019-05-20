@@ -1,4 +1,4 @@
-# Bridgefy Android SDK v 1.1 #
+# Bridgefy Android SDK v 1.1.22 #
 
 # Quick Start Guide #
 
