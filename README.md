@@ -1,4 +1,4 @@
-# Bridgefy Android SDK v 1.1.22 #
+# Bridgefy Android SDK v 1.1.23 #
 
 # Quick Start Guide #
 
@@ -61,7 +61,7 @@ android {
 Then, add the dependency:
 
 ```xml
-implementation 'com.bridgefy:android-sdk:1.1.+'
+implementation 'com.bridgefy:android-sdk:1.1.23'
 ```
 
 ## Initialize Bridgefy ##
