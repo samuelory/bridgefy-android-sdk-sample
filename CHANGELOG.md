@@ -1,6 +1,50 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.24] - 2019‑06‑20
+### Changed
+- Bridgefy reach profile
+
+## [1.1.23] - 2019‑06‑03
+### Changed
+- Fixed a initialization issue
+
+## [1.1.22] - 2019‑04‑08
+### Changed
+- Licence preloaded
+
+## [1.1.21] - 2018-12-04
+### Changed
+- Minor bug fixes and improvements
+
+## [1.1.20] - 2018-11-29
+### Changed
+- Fixed a concurrency issue
+
+## [1.1.19] - 2018-11-7
+### Changed
+- Migrated internal dependencies to AndroidX
+
+## [1.1.18] - 2018-10-25
+### Changed
+- Minor bug fixes and improvements
+
+## [1.1.17] - 2018-10-24
+### Changed
+- Fixes a bug related to the integration of RX-Java subscriptions
+
+## [1.1.16] - 2018-10-23
+### Changed
+- Minor bug fixes and improvements
+
+## [1.1.15] - 2018-10-18
+### Changed
+- Fixed a bug that would cause a periodic crash under rare circumstances
+
+## [1.1.14] - 2018-10-17
+### Changed
+- Minor bug fixes and improvements
+
 ## [1.1.13] - 2018-10-12
 ### Changed
 - Fixed a crash that involved resetting Bluetooth

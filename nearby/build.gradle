@@ -42,7 +42,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     // use the bridgefy distribution
-    compile 'com.bridgefy:android-sdk:1.1.+'
+    compile 'com.bridgefy:android-sdk:1.1.24'
     //this dependency is to provide android-things compatibility
     compileOnly 'com.google.android.things:androidthings:+'
     compile 'com.jakewharton:butterknife:8.8.1'

@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             bluetoothAdapter.enable();
         }
 
-        Bridgefy.initialize(getApplicationContext(), "68898033-3dce-4c80-843e-e10982b942ac", new RegistrationListener() {
+        Bridgefy.initialize(getApplicationContext(), "API_KEY", new RegistrationListener() {
             @Override
             public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
                 // Important data can be fetched from the BridgefyClient object

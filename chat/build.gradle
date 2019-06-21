@@ -48,7 +48,7 @@ dependencies {
     })
     implementation 'com.android.support:appcompat-v7:27.1.1'
     // use the bridgefy distribution
-    implementation 'com.bridgefy:android-sdk:1.1.+'
+    implementation 'com.bridgefy:android-sdk:1.1.24'
     //this dependency is to provide android-things compatibility
     compileOnly 'com.google.android.things:androidthings:+'
     implementation 'com.android.support:support-v4:27.1.1'

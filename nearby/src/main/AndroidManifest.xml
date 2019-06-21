@@ -41,7 +41,7 @@
         <!-- Bridgefy SDK key -->
         <meta-data
             android:name="com.bridgefy.sdk.API_KEY"
-            android:value="b849372f-a817-4639-93fb-18c791facac4" />
+            android:value="API_KEY" />
     </application>
 
 </manifest>

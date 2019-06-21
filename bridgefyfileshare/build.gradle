@@ -57,7 +57,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     // use the bridgefy distribution
     implementation 'com.nbsp:library:1.8'
-    implementation 'com.bridgefy:android-sdk:1.1.+'
+    implementation 'com.bridgefy:android-sdk:1.1.1.1.24'
     //this dependency is to provide android-things compatibility
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compileOnly 'com.google.android.things:androidthings:+'
