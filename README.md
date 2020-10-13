@@ -84,7 +84,7 @@ android {
 Then, add the dependency:
 
 ```javascript
-implementation 'com.bridgefy:android-sdk:1.1.25'
+implementation 'com.bridgefy:android-sdk:1.1.26'
 ```
 ## Initialization
 
