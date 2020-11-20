@@ -42,9 +42,6 @@ public class FileActivity  extends AppCompatActivity {
     private String conversationName;
     private String conversationId;
 
-
-
-
     MessagesRecyclerViewAdapter messagesAdapter =
             new MessagesRecyclerViewAdapter(new ArrayList<>());
 

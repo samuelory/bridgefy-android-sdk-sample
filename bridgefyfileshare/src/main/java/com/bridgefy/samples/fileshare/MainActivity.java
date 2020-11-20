@@ -62,10 +62,6 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.peer_list);
         recyclerView.setAdapter(peersAdapter);
 
-
-
-
-
         Bridgefy.initialize(getApplicationContext(), new RegistrationListener() {
             @Override
             public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
@@ -144,6 +140,16 @@ public class MainActivity extends AppCompatActivity {
         public void onDeviceLost(Device peer) {
             Log.w(TAG, "onDeviceLost: " + peer.getUserId());
             peersAdapter.removePeer(peer);
+        }
+
+        @Override
+        public void onDeviceDetected(Device device) {
+
+        }
+
+        @Override
+        public void onDeviceUnavailable(Device device) {
+
         }
 
         @Override

@@ -1,19 +1,20 @@
 apply plugin: 'com.android.application'
 
+ext {
+    version = '1.0.1'
+}
+
 android {
-    compileSdkVersion 27
-
-
+    compileSdkVersion 30
+    buildToolsVersion '30.0.2'
 
     defaultConfig {
         applicationId "com.bridgefy.samples.fileshare"
         minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
-
+        targetSdkVersion 30
+        versionCode buildVersionCode(this.ext.version)
+        versionName this.ext.version
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -52,19 +53,17 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.androidx.support:appcompat-v7:26.1.0'
     // use the bridgefy distribution
     implementation 'com.nbsp:library:1.8'
-    implementation 'com.bridgefy:android-sdk:1.1.24'
+    implementation 'com.bridgefy:android-sdk:2.0.0'
     //this dependency is to provide android-things compatibility
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    compileOnly 'com.google.android.things:androidthings:+'
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    testImplementation 'junit:junit:4.12'
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    compileOnly 'com.google.android.things:androidthings:1.0'
+    implementation 'com.androidx.support:support-v4:26.1.0'
+    implementation 'com.androidx.support:recyclerview-v7:26.1.0'
+    implementation 'com.androidx.support:design:26.1.0'
+    testImplementation 'junit:junit:4.13.1'
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 }
