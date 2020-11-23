@@ -131,6 +131,16 @@ public class IntroActivity extends AppCompatActivity {
         public void onDeviceLost(Device device) {
             Log.w(TAG, "onDeviceLost: " + device.getUserId());
         }
+
+        @Override
+        public void onDeviceDetected(Device device) {
+
+        }
+
+        @Override
+        public void onDeviceUnavailable(Device device) {
+
+        }
     };
 
     public boolean isThingsDevice(Context context) {

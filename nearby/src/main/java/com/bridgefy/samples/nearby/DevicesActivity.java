@@ -148,6 +148,16 @@ public class DevicesActivity extends AppCompatActivity {
             Log.w(TAG, "Device lost: " + device.getUserId());
         }
 
+        @Override
+        public void onDeviceDetected(Device device) {
+
+        }
+
+        @Override
+        public void onDeviceUnavailable(Device device) {
+
+        }
+
 
         @Override
         public void onStarted() {

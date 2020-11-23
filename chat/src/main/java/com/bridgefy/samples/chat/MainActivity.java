@@ -8,11 +8,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.LocalBroadcastManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bridgefy.samples.chat.entities.Peer;
 import com.bridgefy.sdk.client.Bridgefy;
@@ -208,6 +209,16 @@ public class MainActivity extends AppCompatActivity {
         public void onDeviceLost(Device device) {
             Log.w(TAG, "onDeviceLost: " + device.getUserId());
             peersAdapter.removePeer(device);
+        }
+
+        @Override
+        public void onDeviceDetected(Device device) {
+
+        }
+
+        @Override
+        public void onDeviceUnavailable(Device device) {
+
         }
 
         @Override
