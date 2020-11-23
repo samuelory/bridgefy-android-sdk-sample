@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
             bluetoothAdapter.enable();
 
             username = Build.MANUFACTURER + " " + Build.MODEL;
+            Bridgefy.debug = BuildConfig.DEBUG;
             // initialize the Bridgefy framework
             Bridgefy.initialize(getBaseContext(), registrationListener);
             setupList();
