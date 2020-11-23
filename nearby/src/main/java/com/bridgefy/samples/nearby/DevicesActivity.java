@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bridgefy.sdk.BuildConfig;
 import com.bridgefy.sdk.client.Bridgefy;
 import com.bridgefy.sdk.client.BridgefyClient;
 import com.bridgefy.sdk.client.Device;
@@ -106,7 +107,7 @@ public class DevicesActivity extends AppCompatActivity {
             // enabling bluetooth automatically
             bluetoothAdapter.enable();
         }
-
+        Bridgefy.debug = BuildConfig.DEBUG;
         //Always use steady context objects to avoid leaks
         Bridgefy.initialize(getApplicationContext(), registrationListener);
     }
