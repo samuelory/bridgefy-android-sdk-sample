@@ -1,6 +1,33 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2020-11-20
+### Changed
+- Implementation of Signal Protocol
+- Encrypt all the payload using Signal
+- Implemented a certificate mechanism to encrypt all mesh communications
+
+#### * 2.0.0 is not compatible with previous versions
+
+---
+
+## [1.1.28] - 2020‑12‑10
+### Changed
+- bug fixed: SocketTimeoutException cannot be cast to BridgefyException
+
+## [1.1.27] - 2020‑11‑09
+### Changed
+- bug fixes: sending mesh messages on automatic mode & retry configuration SDK
+
+## [1.1.26] - 2020‑10‑13
+### Changed
+- Encrypt all content with AES algorithm
+
+## [1.1.25] - 2020‑04‑28
+### Changed
+- Now you can use the automatic or on-demand mode
+- Connectivity algorithm optimization
+
 ## [1.1.24] - 2019‑06‑20
 ### Changed
 - Bridgefy reach profile
