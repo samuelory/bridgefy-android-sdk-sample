@@ -1,5 +1,12 @@
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=http%3A%2F%2F104.196.228.98%3A8081%2Fartifactory%2Flibs-release-local%2Fcom%2Fbridgefy%2Fandroid-sdk%2Fmaven-metadata.xml)
+
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## [2.0.1] - 2021-01-13
+### Changed
+- Data transfer with maximum 2M, **only in direct messages**
+- Minor bug fixes and improvements
 
 ## [2.0.0] - 2020-11-20
 ### Changed
