@@ -15,7 +15,7 @@ ext {
         //final release counts as 99.
         //Thus you can only have 98 Release Candidates, which ought to be enough for everyone
 
-        def candidate = "99"
+        def candidate = "0"
         def (major, minor, patch) = version.toLowerCase().replaceAll('-', '').tokenize('.')
         if (patch.endsWith("snapshot")) {
             candidate = "0"

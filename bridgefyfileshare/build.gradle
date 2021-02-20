@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 ext {
-    version = '1.0.1'
+    version = '1.0.2'
 }
 
 android {
     compileSdkVersion 30
-    buildToolsVersion '30.0.2'
+    buildToolsVersion '30.0.3'
 
     defaultConfig {
         applicationId "com.bridgefy.samples.fileshare"
@@ -53,10 +53,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     // use the bridgefy distribution
     implementation 'com.nbsp:library:1.8'
-    implementation 'com.bridgefy:android-sdk:2.0.0'
+    implementation('com.bridgefy:android-sdk:2.0.+@aar') { transitive = true}
     //this dependency is to provide android-things compatibility
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     compileOnly 'com.google.android.things:androidthings:1.0'

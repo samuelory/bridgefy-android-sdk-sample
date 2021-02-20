@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 ext {
-    version = '1.0.1'
+    version = '1.0.2'
 }
 
 android {
     compileSdkVersion 30
-    buildToolsVersion '30.0.2'
+    buildToolsVersion '30.0.3'
     defaultConfig {
         applicationId "com.bridgefy.samples.tic_tac_toe"
         minSdkVersion 21
@@ -48,12 +48,12 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     // use the bridgefy distribution
-    implementation 'com.bridgefy:android-sdk:2.0.0'
+    implementation('com.bridgefy:android-sdk:2.0.+@aar') {transitive = true}
     //this dependency is to provide android-things compatibility
     compileOnly 'com.google.android.things:androidthings:1.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'com.jakewharton:butterknife:10.2.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     implementation 'com.squareup:otto:1.3.8'
