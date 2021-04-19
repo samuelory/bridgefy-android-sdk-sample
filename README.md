@@ -1,6 +1,6 @@
 ### Bridgefy 
 
-<p align="center"><a href="https://bridgefy.me" target="_blank" rel="noopener noreferrer"><img width="400" src="https://admin.bridgefy.me/assets/img/bridgefy-logo.svg" alt="Vue logo"></a></p>
+<p align="center"><a href="https://bridgefy.me" target="_blank" rel="noopener noreferrer"><img width="400" src="https://bridgefy.me/wp-content/uploads/2021/04/bridgefy_logo_red.svg" alt="Vue logo"></a></p>
 
 ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=http%3A%2F%2F104.196.228.98%3A8081%2Fartifactory%2Flibs-release-local%2Fcom%2Fbridgefy%2Fandroid-sdk%2Fmaven-metadata.xml) ![GitHub last commit](https://img.shields.io/github/last-commit/bridgefy/bridgefy-android-samples) ![GitHub issues](https://img.shields.io/github/issues-raw/bridgefy/bridgefy-android-samples?style=plastic)
 
