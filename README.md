@@ -77,7 +77,11 @@ android {
     repositories {
          ...
          maven {
-             url "http://maven.bridgefy.com/artifactory/libs-release-local"
+             // problem with domain, it is suggested to use legacy SDK
+             // url "http://maven.bridgefy.com/artifactory/libs-release-local"
+             url "http://104.196.228.98:8081/artifactory/libs-release-local"
+             // may need to allow unsecured protocols
+             // allowInsecureProtocol true
              artifactUrls=["http://jcenter.bintray.com/"]
               }
         ...

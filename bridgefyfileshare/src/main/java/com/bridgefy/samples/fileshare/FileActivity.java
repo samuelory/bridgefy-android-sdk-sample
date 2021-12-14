@@ -1,26 +1,23 @@
 package com.bridgefy.samples.fileshare;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Build;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bridgefy.samples.fileshare.entities.BridgefyFile;
 import com.bridgefy.sdk.client.Bridgefy;
@@ -46,7 +43,6 @@ public class FileActivity  extends AppCompatActivity {
     private String conversationId;
 
     MessagesRecyclerViewAdapter messagesAdapter = new MessagesRecyclerViewAdapter(new ArrayList<>());
-    private ProgressDialog progressDialog;
 
     private BroadcastReceiver conversationReceiver = new BroadcastReceiver() {
 
@@ -67,17 +63,16 @@ public class FileActivity  extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             int progres = intent.getIntExtra(MainActivity.INTENT_MSG_PROGRESS, 0);
-            if (progressDialog != null)
-            {
-                progressDialog.setProgress(progres);
-                if (progres == 100 || progres == 0)
-                    progressDialog.dismiss();
-            }
+            if (progressBar.getVisibility() == View.GONE) progressBar.setVisibility(View.VISIBLE);
+            progressBar.setProgress(progres);
+            if (progres == 100 || progres == 0)
+                progressBar.setVisibility(View.GONE);
 
         }
     };
 
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.progressbar) ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,16 +155,7 @@ public class FileActivity  extends AppCompatActivity {
                 bridgefyFile.setDirection(BridgefyFile.OUTGOING_FILE);
                 bridgefyFile.setData(fileContent);
                 messagesAdapter.addMessage(bridgefyFile);
-
-                progressDialog = new ProgressDialog(FileActivity.this);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressDialog.setIndeterminate(false);
-                progressDialog.setTitle(file.getName());
-                progressDialog.setMax(100);
-                progressDialog.setProgress(1);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-
+                progressBar.setVisibility(View.VISIBLE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -241,7 +227,7 @@ public class FileActivity  extends AppCompatActivity {
 
             void setBridgefyFile(BridgefyFile bridgefyFile) {
                 this.bridgefyFile = bridgefyFile;
-                    this.txtMessage.setText(bridgefyFile.getFilePath() + " File size "+bridgefyFile.getData().length);
+                this.txtMessage.setText(bridgefyFile.getFilePath() + " File size "+bridgefyFile.getData().length);
 
             }
         }
